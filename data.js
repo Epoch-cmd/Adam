@@ -16,3 +16,59 @@ levitate:{q:"Name a Pokémon that can have the ability Levitate",t:["gastly|haun
 intimidate:{q:"Name a Pokémon that can have the ability Intimidate",t:["gyarados|arcanine","growlithe|salamence|luxray|incineroar|krookodile|ekans|arbok","tauros|hitmontop|shinx|luxio|staraptor|mawile|landorus|mightyena|scrafty|litleo|pyroar","snubbull|granbull|staravia|herdier|stoutland|sandile|krokorok|scraggy|stantler","masquerain|qwilfish",""]},
 starter:{q:"Name a starter Pokémon (any stage)",t:["charmander|bulbasaur|squirtle|charizard","blastoise|venusaur|ivysaur|wartortle|charmeleon|cyndaquil|totodile|chikorita|mudkip|torchic|treecko|piplup|chimchar|turtwig","pikachu|typhlosion|feraligatr|meganium|swampert|blaziken|sceptile|infernape|empoleon|torterra|snivy|tepig|oshawott|froakie|greninja|fennekin|chespin|rowlet|litten|popplio|incineroar|decidueye|grookey|scorbunny|sobble|cinderace|sprigatito|fuecoco|quaxly","quilava|croconaw|bayleef|marshtomp|combusken|grovyle|prinplup|monferno|grotle|serperior|emboar|samurott|servine|pignite|dewott|frogadier|braixen|delphox|quilladin|chesnaught|dartrix|torracat|brionne|primarina|thwackey|rillaboom|raboot|inteleon|drizzile","floragato|meowscarada|crocalor|skeledirge|quaxwell|quaquaval|eevee",""]}
 };
+
+// National Pokédex #1–251, index = number - 1
+window.DEX="Bulbasaur,Ivysaur,Venusaur,Charmander,Charmeleon,Charizard,Squirtle,Wartortle,Blastoise,Caterpie,Metapod,Butterfree,Weedle,Kakuna,Beedrill,Pidgey,Pidgeotto,Pidgeot,Rattata,Raticate,Spearow,Fearow,Ekans,Arbok,Pikachu,Raichu,Sandshrew,Sandslash,Nidoran F,Nidorina,Nidoqueen,Nidoran M,Nidorino,Nidoking,Clefairy,Clefable,Vulpix,Ninetales,Jigglypuff,Wigglytuff,Zubat,Golbat,Oddish,Gloom,Vileplume,Paras,Parasect,Venonat,Venomoth,Diglett,Dugtrio,Meowth,Persian,Psyduck,Golduck,Mankey,Primeape,Growlithe,Arcanine,Poliwag,Poliwhirl,Poliwrath,Abra,Kadabra,Alakazam,Machop,Machoke,Machamp,Bellsprout,Weepinbell,Victreebel,Tentacool,Tentacruel,Geodude,Graveler,Golem,Ponyta,Rapidash,Slowpoke,Slowbro,Magnemite,Magneton,Farfetch'd,Doduo,Dodrio,Seel,Dewgong,Grimer,Muk,Shellder,Cloyster,Gastly,Haunter,Gengar,Onix,Drowzee,Hypno,Krabby,Kingler,Voltorb,Electrode,Exeggcute,Exeggutor,Cubone,Marowak,Hitmonlee,Hitmonchan,Lickitung,Koffing,Weezing,Rhyhorn,Rhydon,Chansey,Tangela,Kangaskhan,Horsea,Seadra,Goldeen,Seaking,Staryu,Starmie,Mr. Mime,Scyther,Jynx,Electabuzz,Magmar,Pinsir,Tauros,Magikarp,Gyarados,Lapras,Ditto,Eevee,Vaporeon,Jolteon,Flareon,Porygon,Omanyte,Omastar,Kabuto,Kabutops,Aerodactyl,Snorlax,Articuno,Zapdos,Moltres,Dratini,Dragonair,Dragonite,Mewtwo,Mew,Chikorita,Bayleef,Meganium,Cyndaquil,Quilava,Typhlosion,Totodile,Croconaw,Feraligatr,Sentret,Furret,Hoothoot,Noctowl,Ledyba,Ledian,Spinarak,Ariados,Crobat,Chinchou,Lanturn,Pichu,Cleffa,Igglybuff,Togepi,Togetic,Natu,Xatu,Mareep,Flaaffy,Ampharos,Bellossom,Marill,Azumarill,Sudowoodo,Politoed,Hoppip,Skiploom,Jumpluff,Aipom,Sunkern,Sunflora,Yanma,Wooper,Quagsire,Espeon,Umbreon,Murkrow,Slowking,Misdreavus,Unown,Wobbuffet,Girafarig,Pineco,Forretress,Dunsparce,Gligar,Steelix,Snubbull,Granbull,Qwilfish,Scizor,Shuckle,Heracross,Sneasel,Teddiursa,Ursaring,Slugma,Magcargo,Swinub,Piloswine,Corsola,Remoraid,Octillery,Delibird,Mantine,Skarmory,Houndour,Houndoom,Kingdra,Phanpy,Donphan,Porygon2,Stantler,Smeargle,Tyrogue,Hitmontop,Smoochum,Elekid,Magby,Miltank,Blissey,Raikou,Entei,Suicune,Larvitar,Pupitar,Tyranitar,Lugia,Ho-Oh,Celebi".split(",");
+
+// "Who can have this ability?" Tiers 0..5 like the other prompts.
+window.ABIL={
+"Static":["pikachu","raichu|electabuzz|pichu","mareep|flaaffy|ampharos|elekid|zapdos","voltorb|electrode|electrike|manectric","emolga|stunfisk|toxel",""],
+"Swift Swim":["magikarp","psyduck|golduck|kingdra|kabutops|omastar","horsea|seadra|goldeen|seaking|kabuto|omanyte|poliwag|poliwhirl|poliwrath|ludicolo|feebas","lotad|lombre|surskit|huntail|gorebyss|relicanth|luvdisc|buizel|floatzel|mantine|qwilfish|armaldo|anorith","finneon|lumineon|mantyke|tympole|palpitoad|seismitoad|tirtouga|carracosta|arrokuda|barraskewda","beartic"],
+"Chlorophyll":["bulbasaur|ivysaur|venusaur","oddish|gloom|vileplume|bellossom|exeggutor|leafeon","bellsprout|weepinbell|victreebel|exeggcute|tangela|tangrowth|hoppip|skiploom|jumpluff","sunkern|sunflora|seedot|nuzleaf|shiftry|tropius|cherubi|lilligant|petilil","sewaddle|swadloon|leavanny|cottonee|whimsicott|deerling|sawsbuck","maractus"],
+"Sturdy":["onix|geodude|graveler|golem","steelix|magnemite|magneton|magnezone|skarmory|sudowoodo","shuckle|pineco|forretress|donphan|aron|lairon|aggron|nosepass|probopass|bonsly","shieldon|bastiodon|roggenrola|boldore|gigalith|carbink|regirock|relicanth","sawk|tirtouga|carracosta|tyrunt|cosmoem|togedemaru|bergmite|avalugg",""],
+"Flash Fire":["vulpix|ninetales|arcanine|growlithe","flareon|ponyta|rapidash|houndoom|houndour","heatran|chandelure|litwick|lampent|cyndaquil|typhlosion","quilava|heatmor","sizzlipede|centiskorch|carkol|coalossal",""],
+"Thick Fat":["snorlax","munchlax|marill|azumarill|walrein|spheal","seel|dewgong|swinub|piloswine|mamoswine|miltank|tepig|emboar","makuhita|hariyama|spoink|grumpig|sealeo|pignite","purugly",""],
+"Speed Boost":["blaziken|torchic","combusken|ninjask|yanma|yanmega","sharpedo|carvanha","venipede|whirlipede|scolipede","",""],
+"Synchronize":["alakazam|espeon|umbreon|mew","abra|kadabra|gardevoir|ralts|kirlia","natu|xatu","munna|musharna|elgyem|beheeyem","indeedee",""],
+"Huge Power or Pure Power":["azumarill","marill|azurill|medicham","meditite|diggersby","bunnelby","",""],
+"Levitate":["gastly|haunter|gengar","koffing|weezing|latios|latias|flygon|rotom","misdreavus|mismagius|unown|vibrava|bronzor|bronzong|hydreigon|cresselia","lunatone|solrock|baltoy|claydol|duskull|uxie|mesprit|azelf|eelektross","chimecho|chingling|carnivine|tynamo|eelektrik|cryogonal|vikavolt",""],
+"Intimidate":["gyarados|arcanine","growlithe|salamence|luxray|incineroar|krookodile|ekans|arbok","tauros|hitmontop|shinx|luxio|staraptor|mawile|landorus|mightyena|scrafty|litleo|pyroar","snubbull|granbull|staravia|herdier|stoutland|sandile|krokorok|scraggy|stantler","masquerain|qwilfish",""]
+};
+
+// "Which Pokémon is this?" name|types|generation|ability|evolution clue
+window.CLUES=`pikachu|electric|1|Static|Evolves from Pichu
+charizard|fire flying|1|Blaze|Evolves from Charmeleon
+gengar|ghost poison|1|Cursed Body|Evolves from Haunter
+snorlax|normal|1|Thick Fat|Evolves from Munchlax
+lucario|fighting steel|4|Steadfast|Evolves from Riolu
+gyarados|water flying|1|Intimidate|Evolves from Magikarp
+mimikyu|ghost fairy|7|Disguise|Does not evolve
+greninja|water dark|6|Protean|Evolves from Frogadier
+garchomp|dragon ground|4|Rough Skin|Evolves from Gabite
+dragonite|dragon flying|1|Multiscale|Evolves from Dragonair
+tyranitar|rock dark|2|Sand Stream|Evolves from Pupitar
+jigglypuff|normal fairy|1|Cute Charm|Evolves from Igglybuff
+slowpoke|water psychic|1|Oblivious|Evolves into Slowbro or Slowking
+ditto|normal|1|Imposter|Does not evolve
+onix|rock ground|1|Sturdy|Evolves into Steelix
+scyther|bug flying|1|Technician|Evolves into Scizor or Kleavor
+lapras|water ice|1|Shell Armor|Does not evolve
+gardevoir|psychic fairy|3|Trace|Evolves from Kirlia
+absol|dark|3|Super Luck|Does not evolve
+metagross|steel psychic|3|Clear Body|Evolves from Metang
+togekiss|fairy flying|4|Serene Grace|Evolves from Togetic
+zoroark|dark|5|Illusion|Evolves from Zorua
+chandelure|ghost fire|5|Flame Body|Evolves from Lampent
+sylveon|fairy|6|Pixilate|Evolves from Eevee
+aegislash|steel ghost|6|Stance Change|Evolves from Doublade
+toxapex|poison water|7|Merciless|Evolves from Mareanie
+corviknight|flying steel|8|Mirror Armor|Evolves from Corvisquire
+dragapult|dragon ghost|8|Infiltrator|Evolves from Drakloak
+tinkaton|fairy steel|9|Mold Breaker|Evolves from Tinkatuff
+wooper|water ground|2|Water Absorb|Evolves into Quagsire
+sableye|dark ghost|3|Prankster|Does not evolve
+azumarill|water fairy|2|Huge Power|Evolves from Marill
+ninjask|bug flying|3|Speed Boost|Evolves from Nincada
+heatran|fire steel|4|Flash Fire|Does not evolve
+rotom|electric ghost|4|Levitate|Does not evolve
+medicham|fighting psychic|3|Pure Power|Evolves from Meditite`.split("\n");

@@ -184,7 +184,7 @@ const GYMS=[
  {n:"Tess",type:"normal",town:"a quiet farm town",team:2},{n:"Gale",type:"flying",town:"a treetop village",team:2},
  {n:"Mira",type:"psychic",town:"a moonlit island",team:3,night:1},{n:"Marina",type:"water",town:"a city under the sea",team:3},
  {n:"Aurora",type:"dragon",town:"the Champion's hall",team:3,champ:1,night:1}];
-const GENERAL=["legend","ability","levitate","intimidate","starter","ghost","dragon"];
+const GENERAL=["legend","ability","starter","ghost","dragon"];
 const EFF={grass:{rock:1.5,water:1.5,fire:.75,flying:.75,dragon:.75},fire:{rock:.75,fire:.75,water:.75,dragon:.75},water:{rock:1.5,fire:1.5,water:.75,dragon:.75}};
 const FOE={rock:{fire:1.5},electric:{water:1.5},fire:{grass:1.5},flying:{grass:1.5},water:{fire:1.5}};
 const T=15,HPS=[100,130,170],POW=[1,1.15,1.3],SIZE=[84,104,124];
@@ -224,7 +224,7 @@ const show=s=>["intro","pre","battle","end"].forEach(x=>$(x).classList.toggle("h
 function bestLine(){const b=store.get("sh-best");$("best").textContent=b?`Best: ${b.badges} badges · ${b.dmg} dmg`:""}
 $("legend").innerHTML=TIERS.map(t=>`<div>${t.e} <b>${t.n}</b> · ${t.d===100?"instant KO":t.d+" power"}</div>`).join("");
 $("gens").innerHTML=STARTERS.map((s,i)=>`<button class="pk" data-i="${i}"><i style='--img:${SPR.creature(s.type,0)}'></i>${s.stages[0]}<span class="type" style="background:${TC[s.type]}">${s.type}</span><small>${s.type==="fire"?"Hard mode":s.type==="grass"?"Strong vs Rock, Water":"Strong vs Rock, Fire"}</small></button>`).join("");
-document.querySelectorAll(".pk").forEach(b=>b.onclick=()=>{const s=STARTERS[+b.dataset.i];S={s,stage:0,hp:HPS[0],gym:0,badges:0,dmg:0,hits:[],turns:0};pre()});
+document.querySelectorAll(".pk").forEach(b=>b.onclick=()=>{const s=STARTERS[+b.dataset.i];S={s,stage:0,hp:HPS[0],gym:0,badges:0,dmg:0,hits:[],turns:0,seen:new Set(),lastKind:null};pre()});
 const meName=()=>S.s.stages[S.stage];
 function rail(){return GYMS.map((g,i)=>`<span class="${i<S.badges?"got":i===S.gym?"now":""}">${g.champ?"👑":i<S.badges?"🏅":i+1}</span>`).join("")}
 function pre(){const g=GYMS[S.gym];setBg(GYMSKY[S.gym]);$("rail1").innerHTML=rail();$("preLbl").textContent=g.champ?"FINAL BATTLE":`GYM ${S.gym+1} OF 8`;
@@ -242,14 +242,32 @@ $("fight").onclick=()=>{const g=GYMS[S.gym];const pool=g.champ?P.legend.list.con
  show("battle");say(`${g.champ?"Champion":"Leader"} ${esc(g.n)} wants to battle!`,"Next",async()=>{ft.classList.add("out");await wait(350);$("foe").style.opacity=1;document.querySelector(".info.f").style.opacity=1;
   say(`${esc(g.n)} sent out <b>${esc(tc(S.team[0]))}</b>!`,"Next",async()=>{mt.classList.add("out");await wait(350);$("me").style.opacity=1;document.querySelector(".info.m").style.opacity=1;say(`Go, <b>${esc(meName())}</b>!`,"Next",turn)})})};
 function setMe(){const m=$("me");m.className="mon m spr";m.style.setProperty("--img",SPR.creature(S.s.type,S.stage));m.style.setProperty("--c",TC[S.s.type]);m.style.setProperty("--s",SIZE[S.stage]+"px");m.style.setProperty("--st",S.stage);$("meName").textContent=meName().toUpperCase();$("meLv").textContent="Lv"+(5+S.badges*6);hp()}
-function sendFoe(){const g=GYMS[S.gym];S.foeHp=100;const f=$("foe");f.className="mon f";f.style.setProperty("--c",TC[g.type==="dragon"&&S.fi===0?"dragon":g.type]);f.style.setProperty("--s",(70+S.gym*3)+"px");f.style.setProperty("--st",g.champ?2:1);
+function sendFoe(){const g=GYMS[S.gym];S.foeHp=100;const f=$("foe");f.className="mon f spr";f.style.setProperty("--img",SPR.foe(g.champ?(S.fi%2?"psychic":"dragon"):g.type));f.style.setProperty("--c",TC[g.type==="dragon"&&S.fi===0?"dragon":g.type]);f.style.setProperty("--s",(70+S.gym*3)+"px");f.style.setProperty("--st",g.champ?2:1);
  $("foeName").textContent=tc(S.team[S.fi]).toUpperCase();$("foeLv").textContent="Lv"+(6+S.gym*6);$("foeTeam").textContent="Team "+S.team.map((_,i)=>i<S.fi?"●":"○").join("");hp()}
 function hp(){const col=v=>v>50?"#4cd964":v>20?"#ffcc00":"#ff3b30";const f=Math.max(0,S.foeHp),m=Math.max(0,S.hp)/HPS[S.stage]*100;
  $("foeHp").style.width=f+"%";$("foeHp").style.background=col(f);$("meHp").style.width=m+"%";$("meHp").style.background=col(m);$("meHpN").textContent=`${Math.max(0,S.hp)}/${HPS[S.stage]}`}
 function say(html,btn,fn){clearInterval(timer);if(!/^\s*</.test(html))html=`<p>${html}</p>`;$("tin").innerHTML=`<div class="res">${html}</div>${btn?`<div class="row"><button class="btn" id="nx">${btn} ▸</button></div>`:""}`;if(btn){$("nx").onclick=fn;$("nx").focus()}}
 function anim(el,c){const x=$(el);x.classList.remove(c);void x.offsetWidth;x.classList.add(c)}
-function turn(){const g=GYMS[S.gym];let key;do{key=Math.random()<.5?(g.champ?"dragon":g.type):pick(GENERAL)}while(key===S.last||!P[key]);S.last=key;cur=P[key];busy=false;
- $("tin").innerHTML=`<p class="small">What will ${esc(meName().toUpperCase())} do?</p><p class="q">${esc(cur.q)}</p><div class="bar"><i id="tb"></i></div>
+const chip=t=>`<span class="type" style="background:${TC[t]}">${t}</span>`;
+const mk=tiers=>{const list=[];tiers.forEach((g,ti)=>{if(g)g.split("|").forEach(a=>{const al=a.split("/");list.push({d:al[0],k:al.map(norm),t:ti})})});return list};
+const ABL=Object.entries(window.ABIL).map(([a,t])=>({q:`Who can have the ability ${a}?`,list:mk(t),key:"ab:"+a}));
+const CL=window.CLUES.map(l=>{const[n,t,g,a,e]=l.split("|");return{n,types:t.split(" "),g,a,e}});
+const DEXN=window.DEX.map(norm);
+const KINDS=[["type",3],["ability",2],["dex",2],["clue",2],["general",2]];
+function makePrompt(){const g=GYMS[S.gym];
+ for(let tries=0;tries<40;tries++){let r=Math.random()*11,kind="type";for(const[k,w] of KINDS){if((r-=w)<0){kind=k;break}}
+  if(kind===S.lastKind&&tries<30)continue;let p;
+  if(kind==="type"){const k=g.champ?pick(["dragon","legend"]):g.type;p={q:P[k].q,list:P[k].list,key:"t:"+k}}
+  else if(kind==="general"){const k=pick(GENERAL);p={q:P[k].q,list:P[k].list,key:"g:"+k}}
+  else if(kind==="ability")p=pick(ABL);
+  else if(kind==="dex"){const n=4+Math.floor(Math.random()*244),list=[];for(let o=-3;o<=3;o++){const nm=window.DEX[n+o-1];list.push({d:nm.toLowerCase(),k:[norm(nm)],t:o===0?5:Math.abs(o)===1?4:Math.abs(o)===2?3:2})}
+   p={q:`Name a Pokémon within 3 of Pokédex #${n}`,list,key:"d:"+n,dex:n}}
+  else{const c=pick(CL);p={q:"Which Pokémon is this?",html:`Which Pokémon is this?<div style="font-size:15px;font-weight:600;margin-top:6px;line-height:1.7">${c.types.map(chip).join(" ")} · Gen ${c.g} · Ability: ${esc(c.a)} · ${esc(c.e)}</div>`,list:[{d:c.n,k:[norm(c.n)],t:4}],key:"c:"+c.n}}
+  if(kind!=="type"&&S.seen.has(p.key)&&tries<35)continue;S.seen.add(p.key);S.lastKind=kind;return p}
+ return {q:P[g.type].q,list:P[g.type].list,key:"t"}}
+window.__cur=()=>cur;
+function turn(){cur=makePrompt();busy=false;
+ $("tin").innerHTML=`<p class="small">What will ${esc(meName().toUpperCase())} do?</p><p class="q">${cur.html||esc(cur.q)}</p><div class="bar"><i id="tb"></i></div>
  <form id="f" autocomplete="off"><input id="ans" placeholder="Type, then Enter" aria-label="Your answer" autocapitalize="off" spellcheck="false"><button class="btn" id="go">Attack</button></form><div class="msg" id="msg" aria-live="polite"></div>`;
  $("f").onsubmit=e=>{e.preventDefault();submit($("ans").value,false)};$("ans").focus();
  left=T;tick();clearInterval(timer);timer=setInterval(()=>{left-=.25;tick();if(left<=0)timeout()},250)}
@@ -258,6 +276,7 @@ function bad(text){$("msg").innerHTML=text;const a=$("ans");a.classList.remove("
 function submit(raw,forced){if(busy)return;const x=norm(raw);if(!x)return;const hit=exact(cur.list,x);
  if(hit){if(S.used.has(hit.d))return bad(`${esc(tc(hit.d))} was already used this battle. Try another!`);return attack(hit)}
  if(!forced){const sug=similar(cur.list,x).filter(e=>!S.used.has(e.d));if(sug.length){$("msg").innerHTML=`Did you mean… <div class="row" style="margin-top:6px">${sug.map(s=>`<button type="button" class="btn sm" data-a="${esc(s.d)}">${esc(tc(s.d))}</button>`).join("")}</div>`;$("msg").querySelectorAll("button").forEach(b=>b.onclick=()=>submit(b.dataset.a,true));return}}
+ if(cur.dex){const i=DEXN.indexOf(x);if(i>=0)return bad(`${esc(window.DEX[i])} is #${i+1}, too far from #${cur.dex}. Keep trying!`)}
  bad(`“${esc(raw)}” doesn't work here. Keep trying!`);$("ans").value=""}
 async function attack(hit){busy=true;clearInterval(timer);S.used.add(hit.d);S.turns++;const g=GYMS[S.gym],tier=TIERS[hit.t];const mult=EFF[S.s.type][g.type]||1;
  const dmg=hit.t===5?S.foeHp:Math.min(S.foeHp,Math.round(tier.d*mult*POW[S.stage]));S.hits.push(tier.e);S.dmg+=dmg;
@@ -269,7 +288,7 @@ async function attack(hit){busy=true;clearInterval(timer);S.used.add(hit.d);S.tu
  let html=`<p><b>${esc(tc(hit.d))}</b> → <b>${move}</b> for ${dmg} damage.${eff}</p>
  <div class="rare"><span class="px" style="font-size:11px">${tier.e} ${tier.n.toUpperCase()}</span><span class="pct">~${p}% of players would say this (est.)</span></div>
  <div class="meter"><i style="width:${Math.max(3,100-hit.t*17)}%;background:${["#a9a9a9","#3fb950","#2f81f7","#a371f7","#f0883e","#ffd23f"][hit.t]}"></i></div>`;
- if(S.foeHp<=0){$("foe").className="mon f faint";html+=`<p>Foe <b>${esc(tc(S.team[S.fi]))}</b> fainted!</p>`;
+ if(S.foeHp<=0){$("foe").className="mon f spr faint";html+=`<p>Foe <b>${esc(tc(S.team[S.fi]))}</b> fainted!</p>`;
   return say(html,"Next",()=>{S.fi++;if(S.fi<S.team.length){sendFoe();say(`${esc(g.n)} sent out <b>${esc(tc(S.team[S.fi]))}</b>!`,"Next",turn)}else win()})}
  const fm=(FOE[g.type]||{})[S.s.type]||1,fd=Math.round((6+S.gym*2)*fm);
  say(html,"Next",async()=>{say(`<p>Foe <b>${esc(tc(S.team[S.fi]))}</b> used <b>${FOEMOVE[g.type]}</b>!${fm>1?" It's super effective!":""}</p>`);anim("foe","flunge");await wait(350);S.hp-=fd;anim("me","hit");hp();await wait(700);
