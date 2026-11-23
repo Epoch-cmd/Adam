@@ -363,10 +363,20 @@ const F={
  "...kk....kk.....",
  "................"]}
 };
-function svg(rows,pal,over){const w=rows[0].length,h=rows.length;let r="";
+function shade(hex,a){const n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255,f=v=>Math.max(0,Math.min(255,Math.round(a>0?v+(255-v)*a:v*(1+a))));return "#"+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,"0")).join("")}
+// Renders at 2x with light from the top-left: lit edges, shaded lower-right edges, a little texture
+function svg(rows,pal,over){const w=rows[0].length,h=rows.length;
  const g=rows.map(x=>x.split(""));(over||[]).forEach(o=>o.forEach((row,y)=>row.split("").forEach((c,x)=>{if(c!=="."&&g[y]&&x<w)g[y][x]=c})));
- g.forEach((row,y)=>row.forEach((c,x)=>{if(c!=="."&&pal[c])r+=`<rect x='${x}' y='${y}' width='1.02' height='1.02' fill='${pal[c]}'/>`}));
- return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${w} ${h}' shape-rendering='crispEdges'>${r}</svg>`).replace(/'/g,"%27")}")`}
+ const open=(x,y)=>y<0||y>=h||x<0||x>=w||g[y][x]==="."||g[y][x]==="k";const flat={k:1,e:1,w:1};
+ const out={};const put=(x,y,c)=>{(out[c]=out[c]||[]).push([x,y])};
+ g.forEach((row,y)=>row.forEach((c,x)=>{const base=pal[c];if(c==="."||!base)return;const X=x*2,Y=y*2;
+  if(flat[c]){put(X,Y,base);put(X+1,Y,base);put(X,Y+1,base);put(X+1,Y+1,base);return}
+  const up=open(x,y-1),lf=open(x-1,y),dn=open(x,y+1),rt=open(x+1,y);
+  const tex=((x*7+y*3)%5===0)&&!up&&!lf&&!dn&&!rt;
+  put(X,Y,up||lf?shade(base,.32):base);put(X+1,Y,up?shade(base,.16):base);
+  put(X,Y+1,lf?shade(base,.1):(tex?shade(base,-.08):base));put(X+1,Y+1,dn||rt?shade(base,-.24):(tex?shade(base,-.12):base))}));
+ let r="";for(const c in out)r+=`<path fill='${c}' d='${out[c].map(([x,y])=>`M${x} ${y}h1v1h-1z`).join("")}'/>`;
+ return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${w*2} ${h*2}' shape-rendering='crispEdges'>${r}</svg>`).replace(/'/g,"%27")}")`}
 window.SPR={
  creature(type,stage){const c=C[type];return svg(c.base,c.pal,c.over.slice(0,stage))},
  names:t=>C[t].names,

@@ -18,17 +18,20 @@
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:transparent;color:var(--ink);font:16px/1.5 Rubik,system-ui,sans-serif;overflow-x:clip;min-height:100vh}
 /* scrolling pixel landscape behind everything */
-#bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(180deg,var(--s1) 0%,var(--s2) 70%);transition:background 1s}
+#bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(180deg,var(--s1) 0 14%,var(--sA) 14% 28%,var(--sB) 28% 42%,var(--s2) 42% 100%);transition:background 1s}
 #bg .l{position:absolute;left:0;right:0;background-repeat:repeat-x;image-rendering:pixelated;animation:scroll linear infinite}
 @keyframes scroll{from{background-position-x:0}to{background-position-x:calc(-1*var(--w))}}
 #bg .stars{inset:0 0 40% 0;background-image:radial-gradient(2px 2px at 20px 30px,#fff,#0000),radial-gradient(2px 2px at 90px 80px,#fff,#0000),radial-gradient(2px 2px at 160px 40px,#fffa,#0000),radial-gradient(2px 2px at 230px 110px,#fff,#0000);background-size:260px 140px;background-repeat:repeat;opacity:var(--stars);animation:none}
-#bg .sun{position:absolute;width:84px;height:84px;right:16%;top:12%;background:var(--sun);border-radius:50%;box-shadow:0 0 0 8px color-mix(in srgb,var(--sun),#0000 60%),0 0 60px var(--sun)}
-#bg .clouds{top:9%;height:96px;--w:384px;background-size:384px 96px;animation-duration:70s}
-#bg .clouds2{top:24%;height:96px;--w:384px;background-size:384px 96px;background-position-y:0;opacity:.75;animation-duration:110s}
-#bg .mtn{bottom:30%;height:120px;--w:320px;background-size:320px 120px;animation-duration:45s}
-#bg .sea{bottom:23%;height:8%;background:repeating-linear-gradient(90deg,var(--sea) 0 56px,color-mix(in srgb,var(--sea),#fff 25%) 56px 64px);--w:64px;animation-duration:3s}
-#bg .trees{bottom:21%;height:96px;--w:128px;background-size:128px 96px;animation-duration:7s}
-#bg .ground{bottom:0;height:22%;background:repeating-linear-gradient(90deg,var(--g1) 0 24px,var(--g2) 24px 32px);--w:32px;animation-duration:.9s}
+#bg .sun{position:absolute;width:84px;height:84px;right:16%;top:10%;background:var(--sun);border-radius:50%;box-shadow:0 0 0 8px color-mix(in srgb,var(--sun),#0000 60%),0 0 60px var(--sun)}
+#bg .clouds{top:5%;height:144px;--w:480px;background-size:480px 144px;animation-duration:80s}
+#bg .clouds2{top:20%;height:96px;--w:480px;background-size:480px 96px;opacity:.85;animation-duration:130s}
+#bg .birds{top:30%;height:60px;--w:600px;background-size:600px 60px;animation-duration:25s}
+#bg .mtn{bottom:33%;height:150px;--w:480px;background-size:480px 150px;animation-duration:60s}
+#bg .sea{bottom:30%;height:24px;--w:96px;background-size:96px 24px;animation-duration:6s}
+#bg .trees{bottom:29%;height:72px;--w:192px;background-size:192px 72px;animation-duration:14s}
+#bg .field{bottom:0;height:30%;background:linear-gradient(180deg,var(--g1),var(--g2));animation:none}
+#bg .blades{bottom:12%;height:120px;--w:192px;background-size:192px 120px;animation-duration:2.2s}
+#bg .bush{bottom:0;height:16%;min-height:90px;--w:144px;background-size:144px 96px;background-position-y:top;background-color:var(--g3);animation-duration:1.6s}
 @media(prefers-reduced-motion:reduce){#bg .l{animation:none}}
 header h1,header .best{color:#fff;text-shadow:0 2px 0 #0008,0 0 12px #0006}
 .px{font-family:"Press Start 2P",monospace}
@@ -71,7 +74,7 @@ h2{font-size:clamp(20px,4.6vw,28px);line-height:1.15;margin:4px 0 8px;text-wrap:
 .vs{display:flex;justify-content:center;align-items:flex-end;gap:clamp(20px,8vw,80px);margin:14px 0}
 .vs i{width:72px;height:108px;background:var(--img) center bottom/contain no-repeat;image-rendering:pixelated}
 .vs span{font:14px "Press Start 2P",monospace;color:var(--hot);align-self:center}
-#bike{position:absolute;bottom:9%;left:18%;width:120px;height:80px;background:var(--img) center/contain no-repeat;image-rendering:pixelated;animation:ride .5s steps(2) infinite}
+#bike{position:absolute;bottom:17%;left:16%;width:120px;height:80px;background:var(--img) center/contain no-repeat;image-rendering:pixelated;animation:ride .5s steps(2) infinite}
 @keyframes ride{50%{transform:translateY(-3px)}}
 .mon.hit{animation:hit .5s}.mon.faint{animation:faint .7s forwards}.mon.evo{animation:evo 1.4s}
 @keyframes bob{50%{transform:translateY(-6px)}}
@@ -113,6 +116,7 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
 .pct{font-size:14px;color:#3c4a44}
 .meter{height:10px;border-radius:6px;background:#e4dfc8;overflow:hidden}.meter i{display:block;height:100%}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.type{display:inline-block;padding:1px 10px;border-radius:999px;color:#fff;font-size:12px;font-weight:800;text-transform:capitalize;text-shadow:0 1px 1px #0006}
 .big{font-size:clamp(20px,5.4vw,30px);color:var(--acc);margin:10px 0;line-height:1.4}
 .legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;font-size:14px;margin-top:12px}
 .legend div{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
@@ -124,7 +128,7 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
 </style>
 </head>
 <body>
-<div id="bg" aria-hidden="true"><div class="l stars"></div><div class="sun"></div><div class="l clouds2" id="c2"></div><div class="l clouds" id="c1"></div><div class="l mtn" id="mtn"></div><div class="l sea"></div><div class="l trees" id="trees"></div><div class="l ground"></div><div id="bike"></div></div>
+<div id="bg" aria-hidden="true"><div class="l stars"></div><div class="sun"></div><div class="l clouds2" id="c2"></div><div class="l clouds" id="c1"></div><div class="l birds" id="birds"></div><div class="l mtn" id="mtn"></div><div class="l sea" id="sea"></div><div class="l trees" id="trees"></div><div class="l field"></div><div id="bike"></div><div class="l blades" id="blades"></div><div class="l bush" id="bush"></div></div>
 <div class="wrap">
 <header><h1 class="px">Shiny<b>Hunt</b></h1><span class="best" id="best"></span></header>
 
@@ -203,20 +207,36 @@ const wait=ms=>new Promise(r=>setTimeout(r,ms));
 
 // Pixel landscape themes, one per gym
 const SKY={
- day:{s1:"#6ec1f0",s2:"#d6f1ff",sun:"#fff4a8",cloud:"#ffffff",m1:"#9ab8cf",m2:"#7a9fbb",t1:"#3f8f4c",t2:"#2c6c39",sea:"#4aa3df",g1:"#7cc35a",g2:"#69b04a",stars:0},
- sunset:{s1:"#f08a4b",s2:"#ffd47c",sun:"#fff0b8",cloud:"#ffe0c4",m1:"#c98670",m2:"#a86a5c",t1:"#5c7d3c",t2:"#46622d",sea:"#e9905e",g1:"#8fbc5c",g2:"#7aa84c",stars:0},
- dusk:{s1:"#5d4f9e",s2:"#f2a3a0",sun:"#ffd6c4",cloud:"#f4c2d0",m1:"#6a5a8c",m2:"#4f4473",t1:"#2f5a48",t2:"#21463a",sea:"#7c78c4",g1:"#4f8a52",g2:"#427a46",stars:.35},
- night:{s1:"#0d1838",s2:"#2b3f7a",sun:"#eef0ff",cloud:"#3a4b85",m1:"#2a3a68",m2:"#1e2b52",t1:"#163a2c",t2:"#0f2c21",sea:"#24407a",g1:"#2d5a36",g2:"#244a2c",stars:1}};
+ day:{s1:"#4fb2f2",sA:"#6ec3f5",sB:"#93d4f8",s2:"#d4f0ff",sun:"#fff4a8",cloud:"#ffffff",cs:"#c9c4ee",m1:"#b4a898",m2:"#8e8474",m3:"#9db4c8",snow:"#f4f4fa",t1:"#3f8f4c",t2:"#2c6c39",sea:"#4aa3df",g1:"#7cc35a",g2:"#4f9a2e",g3:"#2f7a22",b1:"#5fb83a",b2:"#3f9628",b3:"#8ad85a",bird:"#3a3a46",stars:0},
+ sunset:{s1:"#e8743c",sA:"#f2904a",sB:"#f8b060",s2:"#ffd88a",sun:"#fff0b8",cloud:"#ffe6cc",cs:"#e89a8a",m1:"#c98670",m2:"#9a5e52",m3:"#d8a08a",snow:"#ffe8d8",t1:"#5c7d3c",t2:"#46622d",sea:"#e9905e",g1:"#8fbc5c",g2:"#5f8a34",g3:"#3f6a22",b1:"#7aa84c",b2:"#557d30",b3:"#a8cc6a",bird:"#4a2a2a",stars:0},
+ dusk:{s1:"#4a3f8a",sA:"#6a58a8",sB:"#b07fb0",s2:"#f2a3a0",sun:"#ffd6c4",cloud:"#f4c2d0",cs:"#a888b8",m1:"#6a5a8c",m2:"#4a3f6a",m3:"#8878a8",snow:"#e8dcf4",t1:"#2f5a48",t2:"#21463a",sea:"#7c78c4",g1:"#4f8a52",g2:"#33603a",g3:"#22482a",b1:"#427a46",b2:"#2c5a34",b3:"#6aa06a",bird:"#2a2040",stars:.35},
+ night:{s1:"#0b1430",sA:"#132048",sB:"#1c2c5e",s2:"#2b3f7a",sun:"#eef0ff",cloud:"#3a4b85",cs:"#26335e",m1:"#2a3a68",m2:"#1a2548",m3:"#334a80",snow:"#8a9ac8",t1:"#163a2c",t2:"#0f2c21",sea:"#24407a",g1:"#2d5a36",g2:"#1c3c24",g3:"#122a18",b1:"#244a2c",b2:"#18361f",b3:"#3a6a44",bird:"#0a0f20",stars:1}};
 const GYMSKY=["day","day","sunset","sunset","day","day","night","dusk","night"];
-const svg=s=>`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' shape-rendering='crispEdges' ${s}</svg>`)}")`;
+// Pixel helper: draw a w*h grid via fn(x,y)->color|null, merging horizontal runs into rects
+function px(w,h,fn){let r="";for(let y=0;y<h;y++){let x=0;while(x<w){const c=fn(x,y);if(!c){x++;continue}let e=x+1;while(e<w&&fn(e,y)===c)e++;r+=`<rect x='${x}' y='${y}' width='${e-x}' height='1' fill='${c}'/>`;x=e}}
+ return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${w} ${h}' shape-rendering='crispEdges'>${r}</svg>`).replace(/'/g,"%27")}")`}
+const rnd=s=>{const v=Math.sin(s*12.9898)*43758.5453;return v-Math.floor(v)};
+function cloudTile(c,w,h,blobs){return px(w,h,(x,y)=>{let hit=null;for(const[cx,cy,r]of blobs){const dx=x-cx,dy=y-cy,d=dx*dx+dy*dy;if(d<=r*r){if(dy>r*.35||y>blobs[0][1]+blobs[0][2]*.55)hit=hit||c.cs;else hit=(dx<-r*.3&&dy<-r*.3)?"#ffffff":c.cloud;if(hit===c.cloud||hit==="#ffffff")break}}return hit})}
 function setBg(name){const c=SKY[name],b=$("bg");
- for(const k of["s1","s2","sun","sea","g1","g2"])b.style.setProperty("--"+k,c[k]);b.style.setProperty("--stars",c.stars);
- const cl=`width='96' height='24'><g fill='${c.cloud}'><rect x='6' y='12' width='24' height='6'/><rect x='10' y='8' width='14' height='4'/><rect x='14' y='5' width='7' height='3'/><rect x='54' y='15' width='28' height='6'/><rect x='60' y='11' width='15' height='4'/><rect x='64' y='8' width='7' height='3'/></g>`;
- $("c1").style.backgroundImage=svg(cl);$("c2").style.backgroundImage=svg(cl);
- const H=[6,8,10,13,16,19,22,25,27,25,22,19,17,15,17,20,23,26,28,30,28,25,21,17,14,11,9,8,7,6,6,7],h2=[4,5,7,9,11,13,15,14,12,10,9,10,12,14,16,18,17,15,13,11,9,8,7,6,5,5,6,7,8,6,5,4];
- $("mtn").style.backgroundImage=svg(`width='64' height='30'>`+H.map((h,i)=>`<rect x='${i*2}' y='${30-h}' width='2' height='${h}' fill='${c.m1}'/>`).join("")+h2.map((h,i)=>`<rect x='${i*2}' y='${30-h}' width='2' height='${h}' fill='${c.m2}'/>`).join(""));
- const pine=(x,s,f)=>[[1,0],[3,2],[5,4],[7,6],[9,8],[11,10]].map(([w,y])=>`<rect x='${x-Math.floor(w*s/2)}' y='${Math.round(y*s)}' width='${Math.ceil(w*s)}' height='${Math.ceil(2*s)}' fill='${f}'/>`).join("")+`<rect x='${x-1}' y='${Math.round(12*s)}' width='2' height='${24-Math.round(12*s)}' fill='#5b3a24'/>`;
- $("trees").style.backgroundImage=svg(`width='32' height='24'>`+pine(8,1.7,c.t1)+pine(24,1.3,c.t2).replace(/y='(\d+)'/g,(m,v)=>`y='${+v+6}'`))}
+ for(const k of["s1","sA","sB","s2","sun","g1","g2","g3"])b.style.setProperty("--"+k,c[k]);b.style.setProperty("--stars",c.stars);
+ $("c1").style.backgroundImage=cloudTile(c,160,48,[[30,30,12],[44,24,14],[60,30,11],[20,34,8],[110,32,9],[122,26,11],[136,32,9]]);
+ $("c2").style.backgroundImage=cloudTile(c,160,32,[[40,20,7],[50,16,8],[60,21,6],[118,22,5],[126,18,6],[134,22,5]]);
+ $("birds").style.backgroundImage=px(200,20,(x,y)=>{const B=[[40,8],[150,12]];for(const[bx,by]of B){const dx=x-bx;if(Math.abs(dx)<=6&&y===by+Math.floor(Math.abs(dx)/2)-2)return c.bird;if(dx===0&&y===by-1)return c.bird}return null});
+ // two mountain ranges with lit and shaded slopes and snow caps
+ const W=160,H=50,peaks=[[30,44],[78,34],[120,46],[150,30]],peaks2=[[10,22],[55,26],[95,20],[140,24]];
+ const ht=(P,x)=>Math.max(...P.map(([px0,ph])=>ph-Math.abs(x-px0)*0.9),...P.map(([px0,ph])=>ph-Math.abs(x-px0-W)*0.9),...P.map(([px0,ph])=>ph-Math.abs(x-px0+W)*0.9));
+ $("mtn").style.backgroundImage=px(W,H,(x,y)=>{const h2=ht(peaks2,x),h1=ht(peaks,x),yy=H-y;
+  if(yy<=h2){const rising=ht(peaks2,x+1)>h2;return rising?c.t1:c.t2}
+  if(yy<=h1){if(yy>h1-4&&h1>36)return c.snow;const rising=ht(peaks,x+1)>h1;return rising?c.m1:c.m2}return null});
+ $("sea").style.backgroundImage=px(32,8,(x,y)=>(y===2&&(x%11===3||x%11===4))||(y===5&&(x%13===8))?"#ffffff":c.sea);
+ // pine tree line, two tones
+ $("trees").style.backgroundImage=px(64,24,(x,y)=>{const T=[[6,18],[16,22],[27,15],[38,21],[50,17],[59,20]];for(const[tx,th]of T){const top=24-th,dy=y-top;if(dy>=0&&y<23&&Math.abs(x-tx)<=Math.floor(dy*0.45)+((dy%4===3)?1:0))return x<tx?c.t1:c.t2;if(y>=22&&x===tx)return "#5b3a24"}return null});
+ // tall grass blades
+ $("blades").style.backgroundImage=px(64,40,(x,y)=>{const hgt=18+Math.floor(rnd(x*1.7)*18)+(x%5===0?4:0),top=40-hgt;if(y<top)return null;const lean=Math.floor((y-top)*0.15*(rnd(x)>.5?1:-1));
+  if(y<top+3)return c.b3;return (x+lean)%3===0?c.b2:c.b1});
+ // leafy bush layer at the very bottom
+ $("bush").style.backgroundImage=px(48,32,(x,y)=>{const L=[[6,10,6],[16,6,7],[27,11,6],[37,7,7],[46,12,5],[2,20,6],[12,22,7],[24,20,6],[35,23,7],[44,21,6],[8,30,7],[20,31,7],[32,30,7],[42,31,6]];
+  for(const[lx,ly,r]of L){for(const o of[-48,0,48]){const dx=x-lx-o,dy=y-ly;if(dx*dx+dy*dy<=r*r)return dy<-r*.4&&dx<0?c.b3:(dx+dy>r*.5?c.g3:c.b2)}}return c.g3})}
 
 const $=id=>document.getElementById(id);
 let S=null,timer=null,left=0,cur=null,busy=false;
