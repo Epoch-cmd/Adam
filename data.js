@@ -72,3 +72,36 @@ ninjask|bug flying|3|Speed Boost|Evolves from Nincada
 heatran|fire steel|4|Flash Fire|Does not evolve
 rotom|electric ghost|4|Levitate|Does not evolve
 medicham|fighting psychic|3|Pure Power|Evolves from Meditite`.split("\n");
+
+// "Whose signature move is this?" Source: Bulbapedia "Signature move". [move, tier, answers]
+window.SIG=[
+["Volt Tackle",2,"pichu|pikachu|raichu"],["Psystrike",2,"mewtwo"],["Aeroblast",2,"lugia"],["Sacred Fire",2,"ho-oh/hooh"],
+["Roar of Time",2,"dialga"],["Spacial Rend",2,"palkia"],["Shadow Force",2,"giratina"],["Judgment",2,"arceus"],
+["Blue Flare",2,"reshiram"],["Bolt Strike",2,"zekrom"],["Origin Pulse",2,"kyogre"],["Precipice Blades",2,"groudon"],
+["Dragon Ascent",2,"rayquaza"],["Pyro Ball",2,"cinderace"],["Spirit Shackle",2,"decidueye"],["Darkest Lariat",2,"incineroar"],
+["Sparkling Aria",2,"primarina"],["Sketch",2,"smeargle"],
+["Doom Desire",3,"jirachi"],["Psycho Boost",3,"deoxys"],["Magma Storm",3,"heatran"],["Crush Grip",3,"regigigas"],
+["Dark Void",3,"darkrai"],["Seed Flare",3,"shaymin"],["Lunar Dance",3,"cresselia"],["Heart Swap",3,"manaphy"],
+["Searing Shot",3,"victini"],["Night Daze",3,"zorua|zoroark"],["King's Shield",3,"aegislash"],["Geomancy",3,"xerneas"],
+["Oblivion Wing",3,"yveltal"],["Thousand Arrows",3,"zygarde"],["Diamond Storm",3,"diancie"],["Hyperspace Hole",3,"hoopa"],
+["Steam Eruption",3,"volcanion"],["Sunsteel Strike",3,"solgaleo"],["Moongeist Beam",3,"lunala"],["Photon Geyser",3,"necrozma"],
+["Spectral Thief",3,"marshadow"],["Plasma Fists",3,"zeraora"],["Fleur Cannon",3,"magearna"],["Drum Beating",3,"rillaboom"],
+["Snipe Shot",3,"inteleon"],["Behemoth Blade",3,"zacian"],["Behemoth Bash",3,"zamazenta"],["Dynamax Cannon",3,"eternatus"],
+["Dragon Darts",3,"dragapult"],["Flower Trick",3,"meowscarada"],["Torch Song",3,"skeledirge"],["Aqua Step",3,"quaquaval"],
+["Gigaton Hammer",3,"tinkaton"],["Make It Rain",3,"gholdengo"],["Rage Fist",3,"primeape|annihilape"],["Glaciate",3,"kyurem"],
+["Secret Sword",3,"keldeo"],["Relic Song",3,"meloetta"],["Techno Blast",3,"genesect"],["Collision Course",3,"koraidon"],
+["Electro Drift",3,"miraidon"],["Tera Starstorm",3,"terapagos"],["Ivy Cudgel",3,"ogerpon"],["Malignant Chain",3,"pecharunt"],
+["Jungle Healing",3,"zarude"],["Mist Ball",3,"latias"],["Luster Purge",3,"latios"],
+["Bonemerang",4,"cubone|marowak"],["Raging Bull",4,"tauros"],["Conversion",4,"porygon|porygon2|porygon-z/porygonz"],
+["Milk Drink",4,"miltank|skiddo|gogoat"],["Chatter",4,"chatot"],["Flying Press",4,"hawlucha"],["Parting Shot",4,"pancham|pangoro"],
+["Baneful Bunker",4,"toxapex"],["Accelerock",4,"lycanroc"],["Beak Blast",4,"toucannon"],["Clanging Scales",4,"kommo-o/kommoo"],
+["Fiery Dance",4,"volcarona"],["Head Charge",4,"bouffalant"],["Needle Arm",4,"cacnea|cacturne"],["Gear Grind",4,"klink|klang|klinklang"],
+["Twin Beam",4,"girafarig|farigiraf"],["Hyper Drill",4,"dunsparce|dudunsparce"],["Shelter",4,"goomy|sliggoo|goodra"],
+["Electrify",4,"helioptile|heliolisk"],["Ice Hammer",4,"crabominable"],["Revelation Dance",4,"oricorio"],["Multi-Attack",4,"silvally"],
+["Tar Shot",5,"coalossal"],["Shell Trap",5,"turtonator"],["Anchor Shot",5,"dhelmise"],["Octolock",5,"grapploct"],
+["Teatime",5,"polteageist"],["Shore Up",5,"sandygast|palossand"],["Purify",5,"pyukumuku"],["Instruct",5,"oranguru"],
+["Trop Kick",5,"tsareena"],["Floral Healing",5,"comfey"],["Solar Blade",5,"lurantis"],["Aura Wheel",5,"morpeko"],
+["No Retreat",5,"falinks"],["Stuff Cheeks",5,"skwovet|greedent"],["Jaw Lock",5,"chewtle|drednaw"],["Spin Out",5,"varoom|revavroom"],
+["Doodle",5,"grafaiai"],["Order Up",5,"dondozo"],["Silk Trap",5,"spidops"],["Triple Dive",5,"wugtrio"],["Jet Punch",5,"palafin"],
+["Fillet Away",5,"veluza"],["Kowtow Cleave",5,"kingambit"],["Glaive Rush",5,"baxcalibur"],["Salt Cure",5,"naclstack|garganacl"],
+["Spicy Extract",5,"scovillain"],["Lumina Crash",5,"espathra"],["Population Bomb",5,"tandemaus|maushold"],["Double Shock",5,"pawmot"]];

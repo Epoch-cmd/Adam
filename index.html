@@ -235,7 +235,7 @@ function pre(){const g=GYMS[S.gym];setBg(GYMSKY[S.gym]);$("rail1").innerHTML=rai
  show("pre");$("fight").focus()}
 $("fight").onclick=()=>{const g=GYMS[S.gym];const pool=g.champ?P.legend.list.concat(P.dragon.list):P[g.type].list;
  S.team=[];while(S.team.length<g.team){const m=pick(pool).d;if(!S.team.includes(m))S.team.push(m)}
- S.fi=0;S.used=new Set();S.last=null;$("rail2").innerHTML=rail();$("scene").classList.toggle("night",!!g.night);
+ S.fi=0;S.used=new Set();S.last=null;S.gtc=0;$("rail2").innerHTML=rail();$("scene").classList.toggle("night",!!g.night);
  setMe();sendFoe();
  const ft=$("foeTr"),mt=$("meTr");ft.style.setProperty("--img",SPR.trainer(leader(S.gym)));mt.style.setProperty("--img",SPR.trainer(ME));
  ft.style.setProperty("--h","120px");mt.style.setProperty("--h","130px");ft.classList.remove("out");mt.classList.remove("out");$("foe").style.opacity=0;$("me").style.opacity=0;document.querySelector(".info.f").style.opacity=0;document.querySelector(".info.m").style.opacity=0;
@@ -253,17 +253,19 @@ const mk=tiers=>{const list=[];tiers.forEach((g,ti)=>{if(g)g.split("|").forEach(
 const ABL=Object.entries(window.ABIL).map(([a,t])=>({q:`Who can have the ability ${a}?`,list:mk(t),key:"ab:"+a}));
 const CL=window.CLUES.map(l=>{const[n,t,g,a,e]=l.split("|");return{n,types:t.split(" "),g,a,e}});
 const DEXN=window.DEX.map(norm);
-const KINDS=[["type",3],["ability",2],["dex",2],["clue",2],["general",2]];
+const SGP=window.SIG.map(([m,t,a])=>({q:`Whose signature move is ${m}?`,list:a.split("|").map(x=>{const al=x.split("/");return{d:al[0],k:al.map(norm),t}}),key:"s:"+m}));
+const KINDS=[["type",2],["ability",2],["dex",2],["clue",2],["sig",2],["general",1]];
 function makePrompt(){const g=GYMS[S.gym];
- for(let tries=0;tries<40;tries++){let r=Math.random()*11,kind="type";for(const[k,w] of KINDS){if((r-=w)<0){kind=k;break}}
-  if(kind===S.lastKind&&tries<30)continue;let p;
+ for(let tries=0;tries<60;tries++){let r=Math.random()*11,kind="type";for(const[k,w] of KINDS){if((r-=w)<0){kind=k;break}}
+  if(kind===S.lastKind&&tries<50)continue;if(kind==="type"&&S.gtc>=2&&tries<50)continue;let p;
   if(kind==="type"){const k=g.champ?pick(["dragon","legend"]):g.type;p={q:P[k].q,list:P[k].list,key:"t:"+k}}
   else if(kind==="general"){const k=pick(GENERAL);p={q:P[k].q,list:P[k].list,key:"g:"+k}}
   else if(kind==="ability")p=pick(ABL);
+  else if(kind==="sig")p=pick(SGP);
   else if(kind==="dex"){const n=4+Math.floor(Math.random()*244),list=[];for(let o=-3;o<=3;o++){const nm=window.DEX[n+o-1];list.push({d:nm.toLowerCase(),k:[norm(nm)],t:o===0?5:Math.abs(o)===1?4:Math.abs(o)===2?3:2})}
    p={q:`Name a Pokémon within 3 of Pokédex #${n}`,list,key:"d:"+n,dex:n}}
   else{const c=pick(CL);p={q:"Which Pokémon is this?",html:`Which Pokémon is this?<div style="font-size:15px;font-weight:600;margin-top:6px;line-height:1.7">${c.types.map(chip).join(" ")} · Gen ${c.g} · Ability: ${esc(c.a)} · ${esc(c.e)}</div>`,list:[{d:c.n,k:[norm(c.n)],t:4}],key:"c:"+c.n}}
-  if(kind!=="type"&&S.seen.has(p.key)&&tries<35)continue;S.seen.add(p.key);S.lastKind=kind;return p}
+  if(p.q===S.lastQ&&tries<55)continue;if(kind!=="type"&&S.seen.has(p.key)&&tries<45)continue;S.seen.add(p.key);S.lastKind=kind;S.lastQ=p.q;if(kind==="type")S.gtc=(S.gtc||0)+1;return p}
  return {q:P[g.type].q,list:P[g.type].list,key:"t"}}
 window.__cur=()=>cur;
 function turn(){cur=makePrompt();busy=false;
