@@ -8,256 +8,218 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-/* VOICE: a night-time hunt in tall grass, playful, a bit retro
-   IDEA: a handheld field scanner; each round is something rustling in the grass
-   PICTURE: the scanner card with type-coloured signal bars and the mystery slot
-   COLOUR and TYPE: deep night teal, grass green, electric yellow accent, classic type colours; Press Start 2P for labels, Rubik for text
-   LAYOUT: one centred column, scanner on top, results as a capture log */
-:root{color-scheme:light dark;--bg:light-dark(#e9f5ec,#0b1d1f);--panel:light-dark(#ffffff,#122a2d);--ink:light-dark(#0b1d1f,#eaf6ee);--mute:light-dark(#4f6b66,#9fbdb5);--line:light-dark(#cfe3d6,#22464a);--acc:#ffd23f;--grass:#3fb950;--hot:#ff5a5f}
+/* VOICE: a handheld RPG battle, punchy and quick
+   IDEA: a gym challenge; every answer is an attack, rarer answers hit harder
+   PICTURE: the battle arena with two HP bars, badge rail above
+   COLOUR and TYPE: night teal ground, grass green, electric yellow, type colours on the fighters; Press Start 2P + Rubik
+   LAYOUT: one column: badge rail, arena, prompt and input, battle log */
+:root{color-scheme:light dark;--bg:light-dark(#e9f5ec,#0b1d1f);--panel:light-dark(#fff,#122a2d);--ink:light-dark(#0b1d1f,#eaf6ee);--mute:light-dark(#4f6b66,#9fbdb5);--line:light-dark(#cfe3d6,#22464a);--acc:#ffd23f;--grass:#3fb950;--hot:#ff5a5f}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Rubik,system-ui,sans-serif;overflow-x:clip}
-.px{font-family:"Press Start 2P",monospace;letter-spacing:0}
-.grass{height:70px;background:
- radial-gradient(14px 40px at 10px 100%,var(--grass) 98%,#0000) 0 100%/22px 70px repeat-x,
- radial-gradient(12px 34px at 10px 100%,#2a8a3a 98%,#0000) 11px 100%/22px 70px repeat-x;opacity:.9}
-.wrap{max-width:720px;margin:0 auto;padding:clamp(18px,4vw,40px) max(4vw,16px) 0}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-h1{font-size:clamp(20px,4.6vw,30px);margin:0;line-height:1.2}
-h1 b{color:var(--acc);text-shadow:0 0 14px #ffd23f88}
-.tabs{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px;flex-wrap:wrap}
-.tabs button{border:0;background:none;color:var(--ink);font:600 14px Rubik,sans-serif;padding:10px 14px;border-radius:999px;cursor:pointer;min-height:42px}
-.tabs button[aria-pressed=true]{background:var(--acc);color:#1b1b1b}
-.card{background:var(--panel);border:3px solid var(--line);border-radius:24px;padding:clamp(18px,4vw,30px);position:relative;overflow:hidden;box-shadow:0 18px 40px #0003}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Rubik,system-ui,sans-serif;overflow-x:clip}
+.px{font-family:"Press Start 2P",monospace}
+.wrap{max-width:740px;margin:0 auto;padding:clamp(16px,4vw,36px) max(4vw,14px) 0}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:clamp(18px,4.4vw,28px);margin:0;line-height:1.2}h1 b{color:var(--acc);text-shadow:0 0 14px #ffd23f88}
+.best{font-size:13px;color:var(--mute)}
+.card{background:var(--panel);border:3px solid var(--line);border-radius:24px;padding:clamp(16px,4vw,28px);position:relative;overflow:hidden;box-shadow:0 18px 40px #0003}
 .card::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:linear-gradient(90deg,#f08030,#6890f0,#78c850,#f8d030,#f85888,#705898,#7038f8,#ee99ac)}
-.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--mute);gap:8px;flex-wrap:wrap}
-.chip{display:inline-block;background:var(--acc);color:#1b1b1b;font-weight:800;font-size:13px;padding:4px 12px;border-radius:999px}
-.stage{display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:22px;align-items:center;margin:20px 0}
-.prompt{font-size:clamp(22px,4.4vw,32px);font-weight:800;line-height:1.15;text-wrap:balance}
-.scan{width:140px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#0000 58%,var(--acc) 59% 62%,#0000 63%),repeating-radial-gradient(circle,#ffd23f22 0 2px,#0000 2px 14px),#0f2427;position:relative;display:grid;place-items:center;color:var(--acc);font-size:34px;overflow:hidden}
-.scan::after{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,#ffd23f55,#0000 25%);animation:sweep 2.4s linear infinite}
-.scan.stop::after{animation-play-state:paused;opacity:.2}
-@keyframes sweep{to{transform:rotate(360deg)}}
-.clues{display:grid;gap:8px;margin:0 0 16px;padding:0;list-style:none}
-.clues li{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:12px;background:var(--bg);border:1px dashed var(--line);font-weight:600}
-.clues li.lock{color:var(--mute);font-weight:400}
-.clues li span:first-child{font-size:10px;color:var(--mute);white-space:nowrap}
-.type{display:inline-block;padding:2px 10px;border-radius:999px;color:#fff;font-size:13px;font-weight:800;text-transform:capitalize;text-shadow:0 1px 1px #0006;margin-right:4px}
-.bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin-bottom:16px}
-.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--grass),var(--acc));width:100%;transition:width .25s linear}
+h2{font-size:clamp(22px,5vw,30px);line-height:1.15;margin:6px 0 8px;text-wrap:balance}
+.starters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.starter{border:3px solid var(--line);background:var(--bg);color:var(--ink);border-radius:18px;padding:16px 10px;cursor:pointer;font:600 15px Rubik,sans-serif;display:grid;justify-items:center;gap:8px;min-height:44px}
+.starter:hover,.starter:focus-visible{border-color:var(--acc);outline:none;transform:translateY(-2px)}
+.orb{width:64px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;color:#fff;font:16px "Press Start 2P",monospace;text-shadow:0 2px 0 #0005;box-shadow:inset -6px -8px 0 #0003,inset 6px 6px 0 #fff3,0 6px 14px #0004}
+.starter small{color:var(--mute);font-weight:400}
+.rail{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.rail span{width:30px;height:30px;border-radius:8px;border:2px dashed var(--line);display:grid;place-items:center;font-size:15px}
+.rail span.got{border-style:solid;border-color:var(--acc);background:#ffd23f22}
+.rail span.now{border-color:var(--hot);border-style:solid}
+.arena{display:grid;gap:10px;padding:14px;border-radius:18px;background:linear-gradient(180deg,light-dark(#d8efe0,#16353a),light-dark(#bfe3c9,#0f2a2e));margin-bottom:14px}
+.fighter{display:grid;grid-template-columns:56px minmax(0,1fr);gap:12px;align-items:center;background:var(--panel);border-radius:14px;padding:10px 12px;border:2px solid var(--line)}
+.fighter .orb{width:56px;font-size:13px}
+.fighter.foe{margin-right:12%}.fighter.me{margin-left:12%}
+.nm{font-weight:800;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.nm small{font-weight:400;color:var(--mute)}
+.hp{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:6px}
+.hp i{display:block;height:100%;width:100%;background:var(--grass);transition:width .5s ease,background .3s}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.type{display:inline-block;padding:1px 9px;border-radius:999px;color:#fff;font-size:12px;font-weight:800;text-transform:capitalize;text-shadow:0 1px 1px #0006}
+.prompt{font-size:clamp(20px,4.2vw,28px);font-weight:800;line-height:1.15;margin:4px 0 10px;text-wrap:balance}
+.bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--hot),var(--acc),var(--grass));transition:width .25s linear}
 form{display:flex;gap:10px;flex-wrap:wrap}
 input{flex:1 1 220px;font:16px Rubik,sans-serif;padding:14px 16px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);min-height:52px}
 input:focus{outline:none;border-color:var(--acc)}
+input.bad{border-color:var(--hot);animation:shake .3s}
 .btn{font:800 16px Rubik,sans-serif;border:0;border-radius:14px;padding:14px 22px;min-height:52px;cursor:pointer;background:var(--acc);color:#1b1b1b}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
 .btn.sm{min-height:44px;padding:10px 16px;font-size:15px}
-.btn:focus-visible,.tabs button:focus-visible,select:focus-visible{outline:3px solid var(--grass);outline-offset:2px}
-.dym{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--bg);border:2px solid var(--acc);display:none}
-.dym.on{display:block}
-.result{margin-top:16px;padding:16px;border-radius:16px;background:var(--bg);display:none}
-.result.on{display:block}
-.tier{font-size:clamp(14px,3vw,18px);line-height:1.5}
-.alts{font-size:14px;color:var(--mute);margin-top:6px}
-.score{font-size:clamp(30px,8vw,48px);color:var(--acc);margin:12px 0}
-.log{list-style:none;padding:0;margin:14px 0}
-.log li{display:grid;grid-template-columns:2em minmax(0,1fr) auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
-.log b{font-variant-numeric:tabular-nums;white-space:nowrap}
-.log small{display:block;color:var(--mute)}
+.btn:focus-visible{outline:3px solid var(--grass);outline-offset:2px}
+.msg{min-height:1.5em;margin-top:10px;font-weight:600}
+.msg .row{margin-top:8px}
+.log{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--bg);font-size:15px;min-height:52px}
+.log b{color:var(--acc)}
 .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;font-size:14px;margin-top:18px}
+.big{font-size:clamp(22px,6vw,34px);color:var(--acc);margin:10px 0;line-height:1.3}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;font-size:14px;margin-top:16px}
 .legend div{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
-select{font:16px Rubik,sans-serif;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);min-height:48px}
-.note{font-size:13px;color:var(--mute);margin:22px 0 10px}
+.note{font-size:13px;color:var(--mute);margin:20px 0 10px}
 .hide{display:none!important}
-@media(max-width:600px){.stage{grid-template-columns:1fr}.scan{width:84px;font-size:22px;justify-self:start;order:-1}}
-@media(prefers-reduced-motion:reduce){.scan::after{animation:none}}
+.grass{height:64px;background:radial-gradient(14px 40px at 10px 100%,var(--grass) 98%,#0000) 0 100%/22px 64px repeat-x,radial-gradient(12px 34px at 10px 100%,#2a8a3a 98%,#0000) 11px 100%/22px 64px repeat-x;opacity:.9}
+@media(max-width:600px){.starters{grid-template-columns:1fr}.starter{grid-template-columns:64px 1fr;justify-items:start;text-align:left}.fighter.foe{margin-right:0}.fighter.me{margin-left:0}}
+@media(prefers-reduced-motion:reduce){.shake,input.bad{animation:none}.hp i{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-  <h1 class="px">Shiny<b>Hunt</b></h1>
-  <div class="tabs" role="group" aria-label="Mode">
-    <button id="mDaily" aria-pressed="true">Daily</button>
-    <button id="mFree" aria-pressed="false">Unlimited</button>
-  </div>
-</header>
+<header><h1 class="px">Shiny<b>Hunt</b></h1><span class="best" id="best"></span></header>
 
 <section id="intro" class="card">
-  <h2 style="font-size:clamp(22px,5vw,30px);margin:6px 0 8px;line-height:1.15">Anyone can name Pikachu. Can you name Heatmor?</h2>
-  <p style="margin:0">Two kinds of rounds. <b>Name it:</b> any correct Pokémon or ability scores, but the more obscure, the more points. <b>Guess who:</b> clues appear one by one, and the fewer you need, the more you score.</p>
-  <div id="freeOpts" class="row hide">
-    <label for="kind" style="align-self:center">Rounds</label>
-    <select id="kind"><option value="mix">Mixed</option><option value="name">Name it only</option><option value="guess">Guess who only</option></select>
-  </div>
-  <div class="row"><button class="btn" id="start">Start the hunt</button></div>
-  <p id="doneMsg" class="alts"></p>
+  <h2>Eight gyms. One champion. Your knowledge is the attack.</h2>
+  <p style="margin:0">Every turn you get a prompt and 15 seconds. Any correct answer hits, but the rarer it is, the harder it hits. A <b>Shiny</b> answer is an instant KO. Run out of time and the leader hits back.</p>
+  <div class="starters" id="starters"></div>
   <div class="legend" id="legend"></div>
 </section>
 
-<section id="game" class="card hide">
-  <div class="top"><span class="chip" id="kindLbl"></span><span id="prog"></span><span id="run"></span></div>
-  <div class="stage">
-    <div class="prompt" id="prompt"></div>
-    <div class="scan px" id="scan" aria-hidden="true">?</div>
+<section id="pre" class="card hide">
+  <div class="rail" id="rail1"></div>
+  <p class="px" style="font-size:12px;color:var(--mute);margin:8px 0" id="preLbl"></p>
+  <h2 id="preTitle"></h2>
+  <p id="preTxt" style="margin:0"></p>
+  <div class="row"><button class="btn" id="fight">Battle!</button></div>
+</section>
+
+<section id="battle" class="card hide">
+  <div class="rail" id="rail2"></div>
+  <div class="arena">
+    <div class="fighter foe" id="foeBox"><div class="orb" id="foeOrb"></div><div><div class="nm"><span id="foeName"></span><small id="foeHpTxt"></small></div><div class="hp"><i id="foeHp"></i></div></div></div>
+    <div class="fighter me" id="meBox"><div class="orb" id="meOrb"></div><div><div class="nm"><span id="meName"></span><small id="meHpTxt"></small></div><div class="hp"><i id="meHp"></i></div></div></div>
   </div>
-  <ul class="clues hide" id="clues"></ul>
-  <div class="bar" id="barWrap"><i id="timeBar"></i></div>
+  <div class="prompt" id="prompt"></div>
+  <div class="bar"><i id="timeBar"></i></div>
   <form id="f" autocomplete="off">
-    <input id="ans" placeholder="Type a name…" aria-label="Your answer" autocapitalize="off" spellcheck="false">
-    <button class="btn" type="submit" id="go">Throw</button>
+    <input id="ans" placeholder="Type a name, press Enter" aria-label="Your answer" autocapitalize="off" spellcheck="false">
+    <button class="btn" type="submit" id="go">Attack</button>
   </form>
-  <div class="dym" id="dym"></div>
-  <div class="result" id="res">
-    <div class="tier px" id="resTier"></div>
-    <div id="resTxt" style="margin-top:6px"></div>
-    <div class="alts" id="resAlts"></div>
-    <div class="row"><button class="btn" id="next">Next</button></div>
-  </div>
+  <div class="msg" id="msg" aria-live="polite"></div>
+  <div class="log" id="log" aria-live="polite"></div>
 </section>
 
 <section id="end" class="card hide">
-  <div class="top"><span id="endLbl"></span></div>
-  <div class="score px" id="final"></div>
-  <ol class="log" id="log"></ol>
-  <div class="row">
-    <button class="btn" id="share">Copy result</button>
-    <button class="btn ghost" id="again">Play unlimited</button>
-  </div>
-  <p class="alts" id="copied"></p>
+  <div class="rail" id="rail3"></div>
+  <h2 id="endTitle"></h2>
+  <div class="big px" id="endScore"></div>
+  <p id="endTxt" style="margin:0"></p>
+  <div class="row"><button class="btn" id="share">Copy result</button><button class="btn ghost" id="again">New run</button></div>
+  <p class="best" id="copied"></p>
 </section>
 
-<p class="note">Unofficial fan-made trivia, not affiliated with Nintendo, Game Freak or The Pokémon Company. Rarity tiers are hand-picked estimates.</p>
+<p class="note">Unofficial fan-made trivia, not affiliated with Nintendo, Game Freak or The Pokémon Company. Gym leaders are original characters. Rarity tiers are hand-picked estimates.</p>
 </div>
 <div class="grass" aria-hidden="true"></div>
 
 <script>
 {
-const TIERS=[
- {n:"Common",p:10,e:"⬜"},{n:"Uncommon",p:25,e:"🟩"},{n:"Rare",p:45,e:"🟦"},
- {n:"Epic",p:65,e:"🟪"},{n:"Legendary",p:85,e:"🟧"},{n:"Shiny",p:100,e:"✨"}];
-const MISS={n:"Got away",p:0,e:"⬛"};
+const TIERS=[{n:"Common",d:10,e:"⬜"},{n:"Uncommon",d:25,e:"🟩"},{n:"Rare",d:45,e:"🟦"},{n:"Epic",d:65,e:"🟪"},{n:"Legendary",d:85,e:"🟧"},{n:"Shiny",d:100,e:"✨"}];
 const TC={normal:"#a8a878",fire:"#f08030",water:"#6890f0",grass:"#78c850",electric:"#d8b020",ice:"#68b8b8",fighting:"#c03028",poison:"#a040a0",ground:"#c8a048",flying:"#a890f0",psychic:"#f85888",bug:"#a8b820",rock:"#b8a038",ghost:"#705898",dragon:"#7038f8",dark:"#705848",steel:"#9898b8",fairy:"#e47c9c"};
-// Name-it prompts: answers per tier 0..5. "|" separates answers, "/" separates aliases.
-const NAME=[
-{q:"Name a Fire-type Pokémon",t:["charizard|charmander|charmeleon","vulpix|ninetales|arcanine|growlithe|cyndaquil|torchic|blaziken|flareon|moltres|ponyta|rapidash","typhlosion|quilava|combusken|infernape|chimchar|monferno|tepig|emboar|pignite|fennekin|braixen|delphox|litten|torracat|incineroar|scorbunny|raboot|cinderace|fuecoco|crocalor|skeledirge|magmar|ho-oh/hooh|entei|houndoom|houndour|reshiram|victini|chandelure|talonflame","magby|magmortar|slugma|magcargo|torkoal|numel|camerupt|heatran|litwick|lampent|volcarona|larvesta|darumaka|darmanitan|fletchinder|pyroar|litleo|salandit|salazzle|armarouge|ceruledge|charcadet|volcanion","pansear|simisear|oricorio|iron moth|scovillain|gouging fire","heatmor|turtonator|sizzlipede|centiskorch|carkol|coalossal|blacephalon|chi-yu/chiyu"]},
-{q:"Name a Ghost-type Pokémon",t:["gengar|gastly|haunter|mimikyu","misdreavus|mismagius|duskull|dusclops|dusknoir|shuppet|banette|sableye|drifloon|drifblim|litwick|lampent|chandelure|aegislash|spiritomb|giratina|marshadow|lunala|decidueye","froslass|rotom|honedge|doublade|dragapult|dreepy|drakloak|yamask|cofagrigus|golett|golurk|pumpkaboo|gourgeist|phantump|trevenant|frillish|jellicent|skeledirge|ceruledge","sinistea|polteageist|dhelmise|sandygast|palossand|blacephalon|greavard|houndstone|annihilape|gholdengo|gimmighoul|flutter mane|runerigus|cursola|spectrier|basculegion","poltchageist|sinistcha|typhlosion hisui",""]},
-{q:"Name a Dragon-type Pokémon",t:["dragonite|dratini|dragonair|garchomp|rayquaza","salamence|bagon|shelgon|flygon|altaria|swablu|latios|latias|dialga|palkia|giratina|haxorus|axew|fraxure|hydreigon|deino|zweilous|reshiram|zekrom|kyurem|goodra|goomy|sliggoo|dragapult|dreepy|drakloak|kingdra|gible|gabite","noivern|noibat|kommo-o/kommoo|jangmo-o/jangmoo|hakamo-o/hakamoo|druddigon|tyrunt|tyrantrum|zygarde|duraludon|turtonator|drampa|eternatus|regidrago|naganadel|vibrava|guzzlord","appletun|flapple|applin|dipplin|hydrapple|archaludon|baxcalibur|frigibax|arctibax|cyclizar|tatsugiri|dracozolt|dracovish|dragalge|koraidon|miraidon","roaring moon|walking wake|gouging fire|raging bolt",""]},
-{q:"Name a Legendary or Mythical Pokémon",t:["mewtwo|mew|lugia|rayquaza","articuno|zapdos|moltres|ho-oh/hooh|groudon|kyogre|arceus|dialga|palkia|giratina","entei|raikou|suicune|celebi|jirachi|deoxys|latios|latias|darkrai|reshiram|zekrom|kyurem|xerneas|yveltal|zygarde|solgaleo|lunala|necrozma|zacian|zamazenta|eternatus|koraidon|miraidon","regirock|regice|registeel|regigigas|heatran|cresselia|uxie|mesprit|azelf|cobalion|terrakion|virizion|tornadus|thundurus|landorus|tapu koko|tapu lele|tapu bulu|tapu fini|manaphy|shaymin|victini|genesect|meloetta|keldeo|diancie|hoopa|volcanion|marshadow|zeraora|magearna|meltan|melmetal|calyrex|urshifu|kubfu|regieleki|regidrago|ogerpon|terapagos","cosmog|cosmoem|phione|glastrier|spectrier|enamorus|zarude|type: null/type null|silvally","wo-chien/wochien|chien-pao/chienpao|ting-lu/tinglu|chi-yu/chiyu|okidogi|munkidori|fezandipiti|pecharunt"]},
-{q:"Name a starter Pokémon (any stage)",t:["charmander|bulbasaur|squirtle|charizard","blastoise|venusaur|ivysaur|wartortle|charmeleon|cyndaquil|totodile|chikorita|mudkip|torchic|treecko|piplup|chimchar|turtwig","pikachu|typhlosion|feraligatr|meganium|swampert|blaziken|sceptile|infernape|empoleon|torterra|snivy|tepig|oshawott|froakie|greninja|fennekin|chespin|rowlet|litten|popplio|incineroar|decidueye|grookey|scorbunny|sobble|cinderace|sprigatito|fuecoco|quaxly","quilava|croconaw|bayleef|marshtomp|combusken|grovyle|prinplup|monferno|grotle|serperior|emboar|samurott|servine|pignite|dewott|frogadier|braixen|delphox|quilladin|chesnaught|dartrix|torracat|brionne|primarina|thwackey|rillaboom|raboot|inteleon|drizzile","floragato|meowscarada|crocalor|skeledirge|quaxwell|quaquaval|eevee",""]},
-{q:"Name an Eeveelution",t:["","umbreon|espeon|vaporeon|sylveon|flareon","jolteon|leafeon|glaceon","","",""]},
-{q:"Name a Pokémon ability",t:["overgrow|blaze|torrent|static|levitate|intimidate","swift swim|sturdy|pressure|synchronize|run away|keen eye|flash fire|sand veil|shed skin|inner focus|thick fat|guts|chlorophyll|cute charm|speed boost","protean|multiscale|adaptability|drought|drizzle|sand stream|snow warning|huge power|wonder guard|moxie|technician|magic guard|regenerator|disguise|rough skin|serene grace|illusion|stance change|swarm|poison point|lightning rod","water absorb|volt absorb|natural cure|clear body|shell armor|oblivious|own tempo|damp|cloud nine|air lock|compound eyes|shield dust|limber|immunity|insomnia|early bird|hustle|trace|truant|flame body|cursed body|frisk|unnerve|sniper|super luck|mold breaker|tough claws|pixilate|beast boost","imposter|merciless|infiltrator|steadfast|stall|anger point|simple|klutz|unaware|contrary|magic bounce|sheer force|prankster|analytic|liquid ooze|suction cups|sticky hold|forewarn|anticipation|honey gather|pickup","wonder skin|plus|minus|illuminate|stench|ball fetch|zero to hero|commander|stakeout|rks system|power construct|schooling|battle bond|gulp missile|ice face|hunger switch|perish body|wandering spirit|slow start|multitype"]},
-{q:"Name a Pokémon that can have the ability Levitate",t:["gastly|haunter|gengar","koffing|weezing|latios|latias|flygon|rotom","misdreavus|mismagius|unown|vibrava|bronzor|bronzong|hydreigon|cresselia","lunatone|solrock|baltoy|claydol|duskull|uxie|mesprit|azelf|eelektross","chimecho|chingling|carnivine|tynamo|eelektrik|cryogonal|vikavolt",""]},
-{q:"Name a Pokémon that can have the ability Intimidate",t:["gyarados|arcanine","growlithe|salamence|luxray|incineroar|krookodile|ekans|arbok","tauros|hitmontop|shinx|luxio|staraptor|mawile|landorus|mightyena|scrafty|litleo|pyroar","snubbull|granbull|staravia|herdier|stoutland|sandile|krokorok|scraggy|stantler","masquerain|qwilfish",""]}
-];
-// Guess-who: name|types|generation|ability|evolution clue
-const GUESS=`pikachu|electric|1|Static|Evolves from Pichu
-charizard|fire flying|1|Blaze|Evolves from Charmeleon
-gengar|ghost poison|1|Cursed Body|Evolves from Haunter
-snorlax|normal|1|Thick Fat|Evolves from Munchlax
-lucario|fighting steel|4|Steadfast|Evolves from Riolu
-gyarados|water flying|1|Intimidate|Evolves from Magikarp
-eevee|normal|1|Adaptability|Has eight different evolutions
-mimikyu|ghost fairy|7|Disguise|Does not evolve
-greninja|water dark|6|Protean|Evolves from Frogadier
-garchomp|dragon ground|4|Rough Skin|Evolves from Gabite
-dragonite|dragon flying|1|Multiscale|Evolves from Dragonair
-tyranitar|rock dark|2|Sand Stream|Evolves from Pupitar
-umbreon|dark|2|Synchronize|Evolves from Eevee
-jigglypuff|normal fairy|1|Cute Charm|Evolves from Igglybuff
-psyduck|water|1|Cloud Nine|Evolves into Golduck
-magikarp|water|1|Swift Swim|Evolves into Gyarados
-slowpoke|water psychic|1|Oblivious|Evolves into Slowbro or Slowking
-ditto|normal|1|Imposter|Does not evolve
-onix|rock ground|1|Sturdy|Evolves into Steelix
-scyther|bug flying|1|Technician|Evolves into Scizor or Kleavor
-lapras|water ice|1|Shell Armor|Does not evolve
-blaziken|fire fighting|3|Speed Boost|Evolves from Combusken
-gardevoir|psychic fairy|3|Trace|Evolves from Kirlia
-absol|dark|3|Super Luck|Does not evolve
-metagross|steel psychic|3|Clear Body|Evolves from Metang
-rayquaza|dragon flying|3|Air Lock|Does not evolve
-infernape|fire fighting|4|Blaze|Evolves from Monferno
-togekiss|fairy flying|4|Serene Grace|Evolves from Togetic
-zoroark|dark|5|Illusion|Evolves from Zorua
-chandelure|ghost fire|5|Flame Body|Evolves from Lampent
-sylveon|fairy|6|Pixilate|Evolves from Eevee
-aegislash|steel ghost|6|Stance Change|Evolves from Doublade
-decidueye|grass ghost|7|Overgrow|Evolves from Dartrix
-toxapex|poison water|7|Merciless|Evolves from Mareanie
-corviknight|flying steel|8|Mirror Armor|Evolves from Corvisquire
-dragapult|dragon ghost|8|Infiltrator|Evolves from Drakloak
-meowscarada|grass dark|9|Protean|Evolves from Floragato
-tinkaton|fairy steel|9|Mold Breaker|Evolves from Tinkatuff
-wooper|water ground|2|Water Absorb|Evolves into Quagsire
-sableye|dark ghost|3|Prankster|Does not evolve`.split("\n").map(l=>{const[n,t,g,a,e]=l.split("|");return{n,types:t.split(" "),g,a,e}});
-const GP=[100,75,50,25];
-
+// Prompts: answers per tier 0..5. "|" separates answers, "/" separates aliases.
+const P={
+rock:{q:"Name a Rock-type Pokémon",t:["onix|geodude|graveler|golem|rhyhorn|rhydon","tyranitar|larvitar|pupitar|aerodactyl|sudowoodo|omanyte|omastar|kabuto|kabutops|rockruff|lycanroc|aron|lairon|aggron","rhyperior|nosepass|probopass|lileep|cradily|anorith|armaldo|lunatone|solrock|cranidos|rampardos|shieldon|bastiodon|corsola|shuckle|magcargo|regirock|terrakion","roggenrola|boldore|gigalith|dwebble|crustle|tirtouga|carracosta|archen|archeops|tyrunt|tyrantrum|amaura|aurorus|carbink|diancie|relicanth|bonsly|minior","nihilego|stakataka|stonjourner|rolycoly|carkol|coalossal|nacli|naclstack|garganacl|kleavor","glimmet|glimmora|klawf|iron boulder"]},
+fighting:{q:"Name a Fighting-type Pokémon",t:["machop|machoke|machamp|hitmonlee|hitmonchan|lucario","riolu|mankey|primeape|poliwrath|heracross|blaziken|infernape|tyrogue|hitmontop|makuhita|hariyama|meditite|medicham|breloom","combusken|monferno|emboar|pignite|gallade|croagunk|toxicroak|timburr|gurdurr|conkeldurr|scraggy|scrafty|chesnaught|hawlucha|pangoro|urshifu|annihilape","throh|sawk|mienfoo|mienshao|pancham|crabrawler|crabominable|stufful|bewear|passimian|hakamo-o/hakamoo|kommo-o/kommoo|marshadow|keldeo|cobalion|virizion|quaquaval|koraidon","buzzwole|pheromosa|falinks|grapploct|clobbopus|sirfetch'd/sirfetchd|zamazenta|flamigo|great tusk|iron hands|sneasler","slither wing|iron valiant|okidogi"]},
+electric:{q:"Name an Electric-type Pokémon",t:["pikachu|raichu|pichu|jolteon|zapdos","magnemite|magneton|voltorb|electrode|electabuzz|elekid|ampharos|mareep|flaaffy|raikou|luxray|shinx|luxio|rotom|electivire|magnezone|zekrom|zeraora","chinchou|lanturn|electrike|manectric|plusle|minun|pachirisu|emolga|joltik|galvantula|thundurus|tapu koko|toxtricity|regieleki|miraidon","blitzle|zebstrika|tynamo|eelektrik|eelektross|stunfisk|helioptile|heliolisk|dedenne|charjabug|vikavolt|togedemaru|xurkitree|toxel|morpeko|yamper|boltund|pawmi|pawmo|pawmot","pincurchin|dracozolt|arctozolt|tadbulb|bellibolt|wattrel|kilowattrel|raging bolt","sandy shocks|iron thorns"]},
+fire:{q:"Name a Fire-type Pokémon",t:["charizard|charmander|charmeleon","vulpix|ninetales|arcanine|growlithe|cyndaquil|torchic|blaziken|flareon|moltres|ponyta|rapidash","typhlosion|quilava|combusken|infernape|chimchar|monferno|tepig|emboar|pignite|fennekin|braixen|delphox|litten|torracat|incineroar|scorbunny|raboot|cinderace|fuecoco|crocalor|skeledirge|magmar|ho-oh/hooh|entei|houndoom|houndour|reshiram|victini|chandelure|talonflame","magby|magmortar|slugma|magcargo|torkoal|numel|camerupt|heatran|litwick|lampent|volcarona|larvesta|darumaka|darmanitan|fletchinder|pyroar|litleo|salandit|salazzle|armarouge|ceruledge|charcadet|volcanion","pansear|simisear|oricorio|iron moth|scovillain|gouging fire","heatmor|turtonator|sizzlipede|centiskorch|carkol|coalossal|blacephalon|chi-yu/chiyu"]},
+normal:{q:"Name a Normal-type Pokémon",t:["eevee|snorlax|meowth|jigglypuff|rattata|pidgey","persian|raticate|wigglytuff|chansey|blissey|kangaskhan|tauros|ditto|porygon|lickitung|pidgeotto|pidgeot|spearow|fearow|zigzagoon|linoone|slakoth|vigoroth|slaking|teddiursa|ursaring","sentret|furret|hoothoot|noctowl|aipom|ambipom|dunsparce|girafarig|stantler|smeargle|miltank|whismur|loudred|exploud|skitty|delcatty|swablu|zangoose|spinda|kecleon|castform|bidoof|bibarel|starly|staravia|staraptor|buneary|lopunny|munchlax|happiny|porygon2|porygon-z/porygonz|regigigas|arceus","glameow|purugly|chatot|lickilicky|patrat|watchog|lillipup|herdier|stoutland|minccino|cinccino|audino|deerling|sawsbuck|bouffalant|rufflet|braviary|meloetta|bunnelby|diggersby|fletchling|litleo|pyroar|furfrou|pikipek|trumbeak|toucannon|yungoos|gumshoos|stufful|bewear","oranguru|komala|type: null/type null|silvally|drampa|skwovet|greedent|wooloo|dubwool|lechonk|oinkologne|tandemaus|maushold|wyrdeer|ursaluna","squawkabilly|cyclizar|farigiraf|dudunsparce"]},
+flying:{q:"Name a Flying-type Pokémon",t:["pidgey|pidgeot|charizard|gyarados|zubat|golbat|rayquaza","pidgeotto|spearow|fearow|farfetch'd/farfetchd|doduo|dodrio|aerodactyl|articuno|zapdos|moltres|dragonite|lugia|ho-oh/hooh|crobat|togekiss|staraptor|starly|staravia|salamence|altaria|swablu|butterfree|scyther|murkrow|honchkrow","hoothoot|noctowl|yanma|ledyba|ledian|natu|xatu|hoppip|skiploom|jumpluff|gligar|gliscor|delibird|mantine|skarmory|taillow|swellow|wingull|pelipper|talonflame|corviknight|tornadus|landorus|yveltal","masquerain|ninjask|tropius|drifloon|drifblim|chatot|pidove|tranquill|unfezant|woobat|swoobat|sigilyph|archen|archeops|ducklett|swanna|emolga|rufflet|braviary|vullaby|mandibuzz|thundurus|fletchling|fletchinder|vivillon|hawlucha|noibat|noivern|rowlet|dartrix","pikipek|trumbeak|toucannon|oricorio|minior|celesteela|rookidee|corvisquire|cramorant|wattrel|kilowattrel|flamigo|enamorus","bombirdier|squawkabilly|mantyke"]},
+psychic:{q:"Name a Psychic-type Pokémon",t:["mewtwo|mew|alakazam|abra|kadabra|espeon","slowpoke|slowbro|slowking|drowzee|hypno|exeggcute|exeggutor|starmie|mr. mime/mr mime|jynx|gardevoir|kirlia|ralts|wobbuffet|lugia|metagross|jirachi|deoxys|latias|latios|celebi","natu|xatu|girafarig|smoochum|meditite|medicham|spoink|grumpig|lunatone|solrock|baltoy|claydol|beldum|metang|bronzor|bronzong|uxie|mesprit|azelf|cresselia|gallade|solgaleo|lunala|necrozma|calyrex","chimecho|chingling|wynaut|mime jr./mime jr|munna|musharna|woobat|swoobat|sigilyph|gothita|gothorita|gothitelle|solosis|duosion|reuniclus|elgyem|beheeyem|victini|meloetta|espurr|meowstic|inkay|malamar|hoopa|tapu lele|armarouge","oranguru|bruxish|cosmog|cosmoem|dottler|orbeetle|hatenna|hattrem|hatterene|indeedee|farigiraf","flittle|espathra|rabsca|veluza|iron leaves"]},
+water:{q:"Name a Water-type Pokémon",t:["squirtle|wartortle|blastoise|magikarp|gyarados|psyduck|vaporeon|lapras","golduck|poliwag|poliwhirl|poliwrath|tentacool|tentacruel|slowpoke|seel|dewgong|shellder|cloyster|krabby|kingler|horsea|seadra|goldeen|seaking|staryu|starmie|totodile|croconaw|feraligatr|mudkip|marshtomp|swampert|piplup|empoleon|greninja|froakie|wooper|quagsire|kyogre|suicune|oshawott|popplio|sobble|marill|azumarill","omanyte|omastar|kabuto|kabutops|kingdra|chinchou|lanturn|qwilfish|corsola|remoraid|octillery|mantine|lotad|lombre|ludicolo|wingull|pelipper|carvanha|sharpedo|wailmer|wailord|feebas|milotic|spheal|sealeo|walrein|buizel|floatzel|palkia|manaphy|samurott|dewott|prinplup|frogadier|primarina|brionne|inteleon|drizzile|toxapex|quaxly|quaxwell|quaquaval","surskit|barboach|whiscash|corphish|crawdaunt|clamperl|huntail|gorebyss|relicanth|luvdisc|shellos|gastrodon|finneon|lumineon|phione|panpour|simipour|tympole|palpitoad|seismitoad|basculin|tirtouga|carracosta|frillish|jellicent|ducklett|swanna|keldeo|clauncher|clawitzer|binacle|barbaracle|wishiwashi|mareanie|dewpider|araquanid|tapu fini","alomomola|skrelp|pyukumuku|bruxish|chewtle|drednaw|arrokuda|barraskewda|cramorant|dracovish|arctovish|eiscue|wiglett|wugtrio|finizen|palafin|dondozo|tatsugiri|veluza","walking wake|mantyke"]},
+dragon:{q:"Name a Dragon-type Pokémon",t:["dragonite|dratini|dragonair|garchomp|rayquaza","salamence|bagon|shelgon|flygon|altaria|swablu|latios|latias|dialga|palkia|giratina|haxorus|axew|fraxure|hydreigon|deino|zweilous|reshiram|zekrom|kyurem|goodra|goomy|sliggoo|dragapult|dreepy|drakloak|kingdra|gible|gabite","noivern|noibat|kommo-o/kommoo|jangmo-o/jangmoo|hakamo-o/hakamoo|druddigon|tyrunt|tyrantrum|zygarde|duraludon|turtonator|drampa|eternatus|regidrago|naganadel|vibrava|guzzlord","appletun|flapple|applin|dipplin|hydrapple|archaludon|baxcalibur|frigibax|arctibax|cyclizar|tatsugiri|dracozolt|dracovish|dragalge|koraidon|miraidon","roaring moon|walking wake|gouging fire|raging bolt",""]},
+ghost:{q:"Name a Ghost-type Pokémon",t:["gengar|gastly|haunter|mimikyu","misdreavus|mismagius|duskull|dusclops|dusknoir|shuppet|banette|sableye|drifloon|drifblim|litwick|lampent|chandelure|aegislash|spiritomb|giratina|marshadow|lunala|decidueye","froslass|rotom|honedge|doublade|dragapult|dreepy|drakloak|yamask|cofagrigus|golett|golurk|pumpkaboo|gourgeist|phantump|trevenant|frillish|jellicent|skeledirge|ceruledge","sinistea|polteageist|dhelmise|sandygast|palossand|blacephalon|greavard|houndstone|annihilape|gholdengo|gimmighoul|flutter mane|runerigus|cursola|spectrier|basculegion","poltchageist|sinistcha",""]},
+legend:{q:"Name a Legendary or Mythical Pokémon",t:["mewtwo|mew|lugia|rayquaza","articuno|zapdos|moltres|ho-oh/hooh|groudon|kyogre|arceus|dialga|palkia|giratina","entei|raikou|suicune|celebi|jirachi|deoxys|latios|latias|darkrai|reshiram|zekrom|kyurem|xerneas|yveltal|zygarde|solgaleo|lunala|necrozma|zacian|zamazenta|eternatus|koraidon|miraidon","regirock|regice|registeel|regigigas|heatran|cresselia|uxie|mesprit|azelf|cobalion|terrakion|virizion|tornadus|thundurus|landorus|tapu koko|tapu lele|tapu bulu|tapu fini|manaphy|shaymin|victini|genesect|meloetta|keldeo|diancie|hoopa|volcanion|marshadow|zeraora|magearna|meltan|melmetal|calyrex|urshifu|kubfu|regieleki|regidrago|ogerpon|terapagos","cosmog|cosmoem|phione|glastrier|spectrier|enamorus|zarude|type: null/type null|silvally","wo-chien/wochien|chien-pao/chienpao|ting-lu/tinglu|chi-yu/chiyu|okidogi|munkidori|fezandipiti|pecharunt"]},
+ability:{q:"Name a Pokémon ability",t:["overgrow|blaze|torrent|static|levitate|intimidate","swift swim|sturdy|pressure|synchronize|run away|keen eye|flash fire|sand veil|shed skin|inner focus|thick fat|guts|chlorophyll|cute charm|speed boost","protean|multiscale|adaptability|drought|drizzle|sand stream|snow warning|huge power|wonder guard|moxie|technician|magic guard|regenerator|disguise|rough skin|serene grace|illusion|stance change|swarm|poison point|lightning rod","water absorb|volt absorb|natural cure|clear body|shell armor|oblivious|own tempo|damp|cloud nine|air lock|compound eyes|shield dust|limber|immunity|insomnia|early bird|hustle|trace|truant|flame body|cursed body|frisk|unnerve|sniper|super luck|mold breaker|tough claws|pixilate|beast boost","imposter|merciless|infiltrator|steadfast|stall|anger point|simple|klutz|unaware|contrary|magic bounce|sheer force|prankster|analytic|liquid ooze|suction cups|sticky hold|forewarn|anticipation|honey gather|pickup","wonder skin|plus|minus|illuminate|stench|ball fetch|zero to hero|commander|stakeout|rks system|power construct|schooling|battle bond|gulp missile|ice face|hunger switch|perish body|wandering spirit|slow start|multitype"]},
+levitate:{q:"Name a Pokémon that can have the ability Levitate",t:["gastly|haunter|gengar","koffing|weezing|latios|latias|flygon|rotom","misdreavus|mismagius|unown|vibrava|bronzor|bronzong|hydreigon|cresselia","lunatone|solrock|baltoy|claydol|duskull|uxie|mesprit|azelf|eelektross","chimecho|chingling|carnivine|tynamo|eelektrik|cryogonal|vikavolt",""]},
+intimidate:{q:"Name a Pokémon that can have the ability Intimidate",t:["gyarados|arcanine","growlithe|salamence|luxray|incineroar|krookodile|ekans|arbok","tauros|hitmontop|shinx|luxio|staraptor|mawile|landorus|mightyena|scrafty|litleo|pyroar","snubbull|granbull|staravia|herdier|stoutland|sandile|krokorok|scraggy|stantler","masquerain|qwilfish",""]},
+starter:{q:"Name a starter Pokémon (any stage)",t:["charmander|bulbasaur|squirtle|charizard","blastoise|venusaur|ivysaur|wartortle|charmeleon|cyndaquil|totodile|chikorita|mudkip|torchic|treecko|piplup|chimchar|turtwig","pikachu|typhlosion|feraligatr|meganium|swampert|blaziken|sceptile|infernape|empoleon|torterra|snivy|tepig|oshawott|froakie|greninja|fennekin|chespin|rowlet|litten|popplio|incineroar|decidueye|grookey|scorbunny|sobble|cinderace|sprigatito|fuecoco|quaxly","quilava|croconaw|bayleef|marshtomp|combusken|grovyle|prinplup|monferno|grotle|serperior|emboar|samurott|servine|pignite|dewott|frogadier|braixen|delphox|quilladin|chesnaught|dartrix|torracat|brionne|primarina|thwackey|rillaboom|raboot|inteleon|drizzile","floragato|meowscarada|crocalor|skeledirge|quaxwell|quaquaval|eevee",""]}
+};
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/&/g,"and").replace(/[^a-z0-9]/g,"");
-NAME.forEach(p=>{p.list=[];p.t.forEach((g,ti)=>{if(g)g.split("|").forEach(a=>{const al=a.split("/");p.list.push({d:al[0],k:al.map(norm),t:ti})})})});
-// Every Pokémon name we know, for "did you mean" in guess rounds
-const ALL=[...new Set([...NAME.filter(p=>!p.q.includes("ability")).flatMap(p=>p.list.map(e=>e.d)),...GUESS.map(g=>g.n)])].map(d=>({d,k:[norm(d)]}));
-function lev(a,b){if(Math.abs(a.length-b.length)>3)return 9;let prev=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){const cur=[i];for(let j=1;j<=b.length;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[b.length]}
+for(const k in P){const p=P[k];p.list=[];p.t.forEach((g,ti)=>{if(g)g.split("|").forEach(a=>{const al=a.split("/");p.list.push({d:al[0],k:al.map(norm),t:ti})})})}
+const GENERAL=["legend","ability","levitate","intimidate","starter","ghost","dragon"];
+const GYMS=[
+ {n:"Shale",type:"rock",town:"a quarry town"},{n:"Brutus",type:"fighting",town:"a surf-side dojo"},
+ {n:"Volta",type:"electric",town:"a neon port city"},{n:"Ember",type:"fire",town:"a volcano spa"},
+ {n:"Tess",type:"normal",town:"a quiet farm town"},{n:"Gale",type:"flying",town:"a treetop village"},
+ {n:"Mira",type:"psychic",town:"a moonlit island"},{n:"Marina",type:"water",town:"a city under the sea"},
+ {n:"Aurora",type:"dragon",town:"the Champion's hall",champ:true}];
+const STARTERS=[
+ {n:"Treecko",type:"grass",moves:["Absorb","Bullet Seed","Leaf Blade","Giga Drain","Solar Beam","Frenzy Plant"]},
+ {n:"Torchic",type:"fire",moves:["Ember","Flame Wheel","Flamethrower","Fire Blast","Overheat","Blast Burn"]},
+ {n:"Mudkip",type:"water",moves:["Bubble","Water Gun","Surf","Waterfall","Hydro Pump","Hydro Cannon"]}];
+// Your attack type vs gym type
+const EFF={grass:{rock:1.5,water:1.5,fire:.75,flying:.75,dragon:.75},fire:{rock:.75,fire:.75,water:.75,dragon:.75},water:{rock:1.5,fire:1.5,water:.75,dragon:.75}};
+// Gym type vs your type (leader hits back)
+const FOE={rock:{fire:1.5},electric:{water:1.5},fire:{grass:1.5},flying:{grass:1.5},water:{fire:1.5},psychic:{},dragon:{}};
+const T=15,MAXHP=100;
+function lev(a,b){if(Math.abs(a.length-b.length)>3)return 9;let pr=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(pr[j]+1,c[j-1]+1,pr[j-1]+(a[i-1]===b[j-1]?0:1));pr=c}return pr[b.length]}
 const exact=(list,x)=>list.find(e=>e.k.includes(x));
-function similar(list,x){if(x.length<3)return[];const out=[];for(const e of list){let best=9;for(const k of e.k){const tol=k.length>=8?3:k.length>=5?2:1;const d=k.startsWith(x)&&x.length>=4?1:lev(k,x);if(d<=tol&&d<best)best=d}if(best<9)out.push([best,e])}return out.sort((a,b)=>a[0]-b[0]).slice(0,3).map(o=>o[1])}
+function similar(list,x){if(x.length<3)return[];const o=[];for(const e of list){let b=9;for(const k of e.k){const tol=k.length>=8?3:k.length>=5?2:1;const d=k.startsWith(x)&&x.length>=4?1:lev(k,x);if(d<=tol&&d<b)b=d}if(b<9)o.push([b,e])}return o.sort((a,c)=>a[0]-c[0]).slice(0,3).map(v=>v[1])}
 const tc=s=>s.replace(/(^|[\s-])[a-z]/g,c=>c.toUpperCase());
-const typeChips=ts=>ts.map(t=>`<span class="type" style="background:${TC[t]}">${t}</span>`).join("");
-function rng(seed){return()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296}}
-const shuffle=(a,r)=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const now=new Date();const key=`${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
-const dayNo=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-new Date(2026,10,23))/864e5)+1;
-const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function makeSet(mode,kind){const r=mode==="daily"?rng(now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate()):Math.random;
- const n=shuffle(NAME,r).map(p=>({k:"name",p})),g=shuffle(GUESS,r).map(p=>({k:"guess",p}));
- if(kind==="name")return n.slice(0,7);if(kind==="guess")return g.slice(0,7);
- return [n[0],g[0],n[1],g[1],n[2],g[2],n[3]]}
+const chip=t=>`<span class="type" style="background:${TC[t]}">${t}</span>`;
+const orbBg=t=>`radial-gradient(circle at 35% 30%,#fff6,${TC[t]} 45%,#0006 130%)`;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
 const $=id=>document.getElementById(id);
-let mode="daily",set=[],idx=0,log=[],timer=null,left=0,clue=0,locked=false;const T=20;
-$("legend").innerHTML=TIERS.map(t=>`<div>${t.e} <b>${t.n}</b> · ${t.p} pts</div>`).join("");
-const show=s=>["intro","game","end"].forEach(x=>$(x).classList.toggle("hide",x!==s));
-function setMode(m){mode=m;$("mDaily").setAttribute("aria-pressed",m==="daily");$("mFree").setAttribute("aria-pressed",m==="free");$("freeOpts").classList.toggle("hide",m!=="free");
- const done=store.get("sh-"+key);$("doneMsg").textContent=m==="daily"&&done?`You already hunted today: ${done.s} points. New hunt tomorrow, or try Unlimited.`:"";
- $("start").disabled=m==="daily"&&!!done;$("start").style.opacity=$("start").disabled?.5:1;show("intro")}
-$("mDaily").onclick=()=>setMode("daily");$("mFree").onclick=()=>setMode("free");
-$("start").onclick=()=>{set=makeSet(mode,mode==="daily"?"mix":$("kind").value);idx=0;log=[];show("game");ask()};
-const total=()=>log.reduce((a,b)=>a+b.pts,0);
-function ask(){const r=set[idx];locked=false;$("kindLbl").textContent=r.k==="name"?"Name it":"Guess who";$("prog").textContent=`${idx+1} / ${set.length}`;$("run").textContent=`${total()} pts`;
- $("ans").value="";$("ans").disabled=false;$("go").disabled=false;$("res").classList.remove("on");$("dym").classList.remove("on");$("scan").classList.remove("stop");$("scan").textContent="?";
- clearInterval(timer);
- if(r.k==="name"){$("prompt").textContent=r.p.q;$("clues").classList.add("hide");$("barWrap").classList.remove("hide");$("go").textContent="Throw";left=T;tick();timer=setInterval(()=>{left-=.25;tick();if(left<=0)endName(null,"")},250)}
- else{clue=0;$("prompt").textContent="Something is rustling in the grass. Who is it?";$("clues").classList.remove("hide");$("barWrap").classList.add("hide");$("go").textContent="Guess";drawClues()}
- $("ans").focus()}
+let S=null,timer=null,left=0,cur=null,busy=false;
+const show=s=>["intro","pre","battle","end"].forEach(x=>$(x).classList.toggle("hide",x!==s));
+function bestLine(){const b=store.get("sh-best");$("best").textContent=b?`Best run: ${b.badges} badges · ${b.dmg} damage`:""}
+$("legend").innerHTML=TIERS.map(t=>`<div>${t.e} <b>${t.n}</b> · ${t.d===100?"instant KO":t.d+" dmg"}</div>`).join("");
+$("starters").innerHTML=STARTERS.map((s,i)=>`<button class="starter" data-i="${i}"><span class="orb" style="background:${orbBg(s.type)}">${s.n[0]}</span><span>${s.n}<br>${chip(s.type)}<br><small>${s.type==="fire"?"Hard mode: weak into most gyms":s.type==="grass"?"Strong vs Rock and Water":"Strong vs Rock and Fire"}</small></span></button>`).join("");
+document.querySelectorAll(".starter").forEach(b=>b.onclick=()=>{S={me:STARTERS[+b.dataset.i],hp:MAXHP,gym:0,badges:0,dmg:0,hits:[]};pre()});
+function rail(){return GYMS.map((g,i)=>`<span class="${i<S.badges?"got":i===S.gym?"now":""}" title="${g.n}">${i<S.badges?(g.champ?"👑":"🏅"):g.champ?"👑":i+1}</span>`).join("")}
+function pre(){const g=GYMS[S.gym];$("rail1").innerHTML=rail();$("preLbl").textContent=g.champ?"FINAL BATTLE":`GYM ${S.gym+1} OF 8`;
+ $("preTitle").innerHTML=`${g.champ?"Champion":"Leader"} ${g.n} ${chip(g.type)}`;
+ const e=(EFF[S.me.type][g.type]||1),f=(FOE[g.type]||{})[S.me.type]||1;
+ $("preTxt").innerHTML=`You arrive at ${g.town}. ${S.me.n} has <b>${S.hp}/${MAXHP} HP</b>.${e>1?" Your attacks are <b>super effective</b> here (×1.5).":e<1?" Your attacks are <b>not very effective</b> here (×0.75).":""}${f>1?" Careful: this leader hits you extra hard.":""}`;
+ show("pre");$("fight").focus()}
+$("fight").onclick=()=>{const g=GYMS[S.gym];S.foeHp=g.champ?150:100;S.foeMax=S.foeHp;S.used=new Set();S.last=null;
+ $("rail2").innerHTML=rail();$("foeName").innerHTML=`${g.champ?"Champion":"Leader"} ${g.n} ${chip(g.type)}`;$("foeOrb").style.background=orbBg(g.type);$("foeOrb").textContent=g.n[0];
+ $("meName").innerHTML=`${S.me.n} ${chip(S.me.type)}`;$("meOrb").style.background=orbBg(S.me.type);$("meOrb").textContent=S.me.n[0];
+ $("log").innerHTML=`${g.n} wants to battle!`;hp();show("battle");turn()};
+function hp(){const f=Math.max(0,S.foeHp)/S.foeMax*100,m=Math.max(0,S.hp)/MAXHP*100;$("foeHp").style.width=f+"%";$("meHp").style.width=m+"%";
+ const col=v=>v>50?"var(--grass)":v>20?"var(--acc)":"var(--hot)";$("foeHp").style.background=col(f);$("meHp").style.background=col(m);
+ $("foeHpTxt").textContent=`${Math.max(0,Math.round(S.foeHp))}/${S.foeMax}`;$("meHpTxt").textContent=`${Math.max(0,S.hp)}/${MAXHP}`}
+function turn(){const g=GYMS[S.gym];let key;do{key=Math.random()<.5?g.type:pick(GENERAL)}while(key===S.last||!P[key]);S.last=key;cur=P[key];busy=false;
+ $("prompt").textContent=cur.q;$("ans").value="";$("ans").disabled=false;$("go").disabled=false;$("msg").innerHTML="";$("ans").focus();
+ left=T;tick();clearInterval(timer);timer=setInterval(()=>{left-=.25;tick();if(left<=0)timeout()},250)}
 function tick(){$("timeBar").style.width=Math.max(0,left/T*100)+"%"}
-function drawClues(){const p=set[idx].p;const C=[["ABILITY",p.a],["GEN",`Introduced in Generation ${p.g}`],["TYPE",typeChips(p.types)],["EVO",`${p.e}. Starts with “${p.n[0].toUpperCase()}”, ${p.n.length} letters`]];
- $("clues").innerHTML=C.map((c,i)=>i<=clue?`<li><span class="px">${c[0]}</span><span>${i===2?c[1]:esc(c[1])}</span></li>`:`<li class="lock"><span class="px">${c[0]}</span><span>Locked · worth ${GP[i]} if you guess now</span></li>`).join("")}
-function submit(raw,forced){if(locked)return;const r=set[idx];const x=norm(raw);if(!x)return;$("dym").classList.remove("on");
- if(r.k==="name"){const hit=exact(r.p.list,x);if(hit||forced)return endName(hit,raw);const sug=similar(r.p.list,x);if(sug.length)return offer(sug,raw);return endName(null,raw)}
- const ok=norm(r.p.n)===x;if(ok)return endGuess(true);
- if(!forced){const sug=similar(ALL,x);if(sug.length&&!exact(ALL,x))return offer(sug,raw)}
- if(clue<3){clue++;drawClues();$("ans").value="";$("dym").innerHTML=`<b>Not ${esc(tc(raw))}.</b> New clue unlocked.`;$("dym").classList.add("on");$("ans").focus()}else endGuess(false)}
-function offer(sug,raw){$("dym").innerHTML=`<div style="margin-bottom:8px"><b>Did you mean…</b></div><div class="row" style="margin-top:0">${sug.map(s=>`<button class="btn sm" data-a="${esc(s.d)}">${esc(tc(s.d))}</button>`).join("")}<button class="btn sm ghost" data-raw="1">No, keep “${esc(raw)}”</button></div>`;$("dym").classList.add("on");
- $("dym").querySelectorAll("button").forEach(b=>b.onclick=()=>{b.dataset.raw?submit(raw,true):submit(b.dataset.a,true)})}
-function lock(){locked=true;clearInterval(timer);$("ans").disabled=true;$("go").disabled=true;$("scan").classList.add("stop");$("dym").classList.remove("on")}
-function endName(hit,raw){lock();const p=set[idx].p;const tier=hit?TIERS[hit.t]:MISS;log.push({q:p.q,a:hit?tc(hit.d):(raw||"—"),e:tier.e,pts:tier.p});
- $("scan").textContent=hit?"✓":"✗";$("resTier").textContent=`${tier.e} ${tier.n} +${tier.p}`;$("resTier").style.color=hit&&hit.t>=4?"var(--acc)":"inherit";
- $("resTxt").textContent=hit?`${tc(hit.d)} counts.`:raw?`“${raw}” isn't on the list.`:"Time's up. It got away.";
- const deep=p.list.filter(e=>e.t>=3&&(!hit||e.d!==hit.d));$("resAlts").textContent=deep.length?"Rarer picks: "+shuffle(deep,Math.random).slice(0,3).map(e=>tc(e.d)).join(", "):"";done()}
-function endGuess(ok){lock();const p=set[idx].p;const pts=ok?GP[clue]:0;const e=ok?["✨","🟧","🟦","🟩"][clue]:"⬛";clue=3;drawClues();
- log.push({q:"Guess who",a:tc(p.n),e,pts});$("scan").textContent=ok?"✓":"✗";
- $("resTier").textContent=ok?`${e} Caught +${pts}`:`⬛ Got away +0`;$("resTier").style.color=ok&&pts>=75?"var(--acc)":"inherit";
- $("resTxt").innerHTML=`It was <b>${esc(tc(p.n))}</b> ${typeChips(p.types)}`;$("resAlts").textContent=ok?`Caught on clue ${GP.indexOf(pts)+1} of 4.`:"";done()}
-function done(){$("next").textContent=idx===set.length-1?"See results":"Next";$("res").classList.add("on");$("next").focus()}
+function bad(text){$("msg").innerHTML=text;const a=$("ans");a.classList.remove("bad");void a.offsetWidth;a.classList.add("bad");a.select()}
+function submit(raw,forced){if(busy)return;const x=norm(raw);if(!x)return;
+ const hit=exact(cur.list,x);
+ if(hit){if(S.used.has(hit.d))return bad(`${esc(tc(hit.d))} is already used this battle. Try another!`);return attack(hit)}
+ if(!forced){const sug=similar(cur.list,x).filter(e=>!S.used.has(e.d));if(sug.length){$("msg").innerHTML=`Did you mean… <div class="row">${sug.map(s=>`<button type="button" class="btn sm" data-a="${esc(s.d)}">${esc(tc(s.d))}</button>`).join("")}</div>`;$("msg").querySelectorAll("button").forEach(b=>b.onclick=()=>submit(b.dataset.a,true));return}}
+ bad(`“${esc(raw)}” doesn't work here. Keep trying!`);$("ans").value=""}
+function stop(){busy=true;clearInterval(timer);$("ans").disabled=true;$("go").disabled=true;$("msg").innerHTML=""}
+function shake(id){const el=$(id);el.classList.remove("shake");void el.offsetWidth;el.classList.add("shake")}
+function attack(hit){stop();S.used.add(hit.d);const g=GYMS[S.gym],tier=TIERS[hit.t];const mult=EFF[S.me.type][g.type]||1;
+ let dmg=hit.t===5?S.foeHp:Math.round(tier.d*mult);S.foeHp-=dmg;S.dmg+=dmg;S.hits.push(tier.e);
+ const eff=hit.t<5&&mult>1?" It's super effective!":hit.t<5&&mult<1?" It's not very effective…":"";
+ $("log").innerHTML=`${tier.e} <b>${esc(tc(hit.d))}</b> is ${tier.n}! ${S.me.n} used <b>${S.me.moves[hit.t]}</b> for ${dmg} damage.${eff}${hit.t===5?" <b>One-hit KO!</b>":""}`;
+ shake("foeBox");hp();setTimeout(()=>S.foeHp<=0?win():turn(),1400)}
+function timeout(){stop();const g=GYMS[S.gym];const m=(FOE[g.type]||{})[S.me.type]||1;const d=Math.round((12+S.gym*3)*m);S.hp-=d;S.hits.push("⬛");
+ $("log").innerHTML=`Time's up! ${g.n} attacks for <b>${d}</b> damage.${m>1?" It's super effective!":""} ${cur.list.filter(e=>e.t>=4).length?"A Legendary pick was "+esc(tc(pick(cur.list.filter(e=>e.t>=4)).d))+".":""}`;
+ shake("meBox");hp();setTimeout(()=>S.hp<=0?over(false):turn(),1800)}
+function win(){S.badges++;const g=GYMS[S.gym];if(g.champ)return over(true);S.gym++;const heal=Math.min(50,MAXHP-S.hp);S.hp+=heal;
+ $("log").innerHTML=`${g.n} is defeated! You earned a badge 🏅${heal?` and healed ${heal} HP`:""}.`;setTimeout(pre,1500)}
+function over(champ){const b=store.get("sh-best");if(!b||S.badges>b.badges||(S.badges===b.badges&&S.dmg>b.dmg))store.set("sh-best",{badges:S.badges,dmg:S.dmg});bestLine();
+ $("rail3").innerHTML=rail();$("endTitle").textContent=champ?`Champion ${S.me.n}! You beat all eight gyms and Aurora.`:`${S.me.n} fainted at ${GYMS[S.gym].champ?"the Champion":"gym "+(S.gym+1)}.`;
+ $("endScore").textContent=`${S.badges} badge${S.badges===1?"":"s"} · ${S.dmg} dmg`;
+ const sh=S.hits.filter(h=>h==="✨").length;$("endTxt").textContent=`${S.hits.length} turns, ${sh} Shiny answer${sh===1?"":"s"}. Rarer answers hit harder, so dig deeper next run.`;$("copied").textContent="";show("end")}
 $("f").onsubmit=e=>{e.preventDefault();submit($("ans").value,false)};
-$("next").onclick=()=>{idx++;idx<set.length?ask():finish()};
-function finish(){const s=total();$("final").textContent=`${s}/${set.length*100}`;$("endLbl").textContent=mode==="daily"?`Daily hunt #${dayNo}`:"Unlimited hunt";
- $("log").innerHTML=log.map(l=>`<li><span>${l.e}</span><span>${esc(l.a)}<small>${esc(l.q)}</small></span><b>${l.pts}</b></li>`).join("");
- if(mode==="daily")store.set("sh-"+key,{s});$("copied").textContent="";show("end")}
-$("share").onclick=async()=>{const txt=`Shiny Hunt ${mode==="daily"?"#"+dayNo:"(unlimited)"} ${total()}/${set.length*100}\n${log.map(l=>l.e).join("")}\n${location.href.split("#")[0]}`;
+$("share").onclick=async()=>{const txt=`Shiny Hunt ${S.badges===9?"👑 CHAMPION":`🏅${S.badges}/8`} · ${S.dmg} dmg with ${S.me.n}\n${S.hits.slice(-20).join("")}\n${location.href.split("#")[0]}`;
  try{await navigator.clipboard.writeText(txt);$("copied").textContent="Copied. Paste it in the group chat."}catch(e){$("copied").textContent=txt}};
-$("again").onclick=()=>setMode("free");
-setMode("daily");
+$("again").onclick=()=>{bestLine();show("intro")};
+bestLine();
 }
 </script>
 </body>
