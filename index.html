@@ -55,24 +55,24 @@ h2{font-size:clamp(20px,4.6vw,28px);line-height:1.15;margin:4px 0 8px;text-wrap:
 .scene.night{background:linear-gradient(180deg,#22305c 0%,#40508a 46%,#2f5a3b 46%,#1f4229 100%)}
 .plat{position:absolute;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,#e9f7c9,#8bc46a 60%,#5f9a48);box-shadow:inset 0 -6px 0 #0002}
 .plat.f{width:38%;height:13%;right:5%;top:44%}.plat.m{width:44%;height:15%;left:2%;bottom:6%}
-.mon{position:absolute;width:var(--s);height:var(--s);border-radius:46% 46% 40% 40%;background:radial-gradient(circle at 35% 28%,#fff8,var(--c) 42%,color-mix(in srgb,var(--c),#000 45%) 100%);box-shadow:0 10px 0 -4px #0002;animation:bob 1.6s ease-in-out infinite;transition:width .6s,height .6s}
+.mon{position:absolute;width:min(var(--s),30vw);height:min(var(--s),30vw);border-radius:46% 46% 40% 40%;background:radial-gradient(circle at 35% 28%,#fff8,var(--c) 42%,color-mix(in srgb,var(--c),#000 45%) 100%);box-shadow:0 10px 0 -4px #0002;animation:bob 1.6s ease-in-out infinite;transition:width .6s,height .6s}
 .mon::before{content:"";position:absolute;width:12%;height:16%;border-radius:50%;background:#1b1b1b;top:34%;left:26%;box-shadow:calc(var(--s)*.3) 0 0 #1b1b1b}
 .mon::after{content:"";position:absolute;inset:-14%;border-radius:50%;border:3px solid var(--c);opacity:calc(var(--st)*.35)}
 .mon.back::before{display:none}
-.mon.f{right:calc(5% + 19% - var(--s)/2);top:calc(48% - var(--s))}
-.mon.m{left:calc(2% + 22% - var(--s)/2);bottom:calc(13%)}
-.mon.spr{background:var(--img) center/contain no-repeat;image-rendering:pixelated;border-radius:0;box-shadow:none}
+.mon.f{right:calc(5% + 19% - min(var(--s),30vw)/2);top:calc(54% - min(var(--s),30vw))}
+.mon.m{left:calc(2% + 22% - min(var(--s),30vw)/2);bottom:8%}
+.mon.spr{background:var(--img) center/contain no-repeat;image-rendering:auto;border-radius:0;box-shadow:none}
 .mon.spr::before,.mon.spr::after{display:none}
-.tr{position:absolute;width:calc(var(--h)*.67);height:var(--h);background:var(--img) center bottom/contain no-repeat;image-rendering:pixelated;transition:transform .6s ease,opacity .6s}
+.tr{position:absolute;width:var(--h);height:var(--h);background:var(--img) center bottom/contain no-repeat;transition:transform .6s ease,opacity .6s}
 .tr.f{right:calc(5% + 19% - var(--h)*.33);top:calc(50% - var(--h))}.tr.m{left:calc(2% + 22% - var(--h)*.33);bottom:13%}
 .tr.out.f{transform:translateX(160px);opacity:0}.tr.out.m{transform:translateX(-160px);opacity:0}
 .pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
 .pk{border:3px solid var(--line);background:var(--bg);color:var(--ink);border-radius:18px;padding:14px 8px;cursor:pointer;font:700 15px Rubik,sans-serif;display:grid;justify-items:center;gap:6px;min-height:44px}
 .pk:hover,.pk:focus-visible{border-color:var(--acc);outline:none;transform:translateY(-3px)}
-.pk i{width:96px;height:96px;background:var(--img) center/contain no-repeat;image-rendering:pixelated;animation:bob 1.6s ease-in-out infinite}
+.pk i{width:110px;height:110px;background:var(--img) center/contain no-repeat;animation:bob 1.6s ease-in-out infinite}
 .pk small{font-weight:400;color:var(--mute)}
 .vs{display:flex;justify-content:center;align-items:flex-end;gap:clamp(20px,8vw,80px);margin:14px 0}
-.vs i{width:72px;height:108px;background:var(--img) center bottom/contain no-repeat;image-rendering:pixelated}
+.vs i{width:110px;height:110px;background:var(--img) center bottom/contain no-repeat}
 .vs span{font:14px "Press Start 2P",monospace;color:var(--hot);align-self:center}
 #bike{position:absolute;bottom:17%;left:16%;width:120px;height:80px;background:var(--img) center/contain no-repeat;image-rendering:pixelated;animation:ride .5s steps(2) infinite}
 @keyframes ride{50%{transform:translateY(-3px)}}
@@ -134,7 +134,7 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
 
 <section id="intro" class="card">
   <h2>Choose your partner. Beat eight gyms. Rare answers hit harder.</h2>
-  <p style="margin:0">Every turn you get a prompt and 15 seconds. Wrong guesses? Keep typing. The rarer your answer, the stronger the move, and a <b>Shiny</b> answer is an instant KO. Your partner evolves after badges 2 and 5, and its look changes too. Opponents are random every run.</p>
+  <p style="margin:0">Every turn you get a prompt and 20 seconds. Wrong guesses? Keep typing. The rarer your answer, the stronger the move, and a <b>Shiny</b> answer is an instant KO. Your partner evolves after badges 2 and 5, and its look changes too. Opponents are random every run.</p>
   <div class="pick" id="gens"></div>
   <div class="legend" id="legend"></div>
 </section>
@@ -171,7 +171,10 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
 </div>
 
 <script src="data.js"></script>
+<script src="pokedata.js"></script>
 <script src="sprites.js"></script>
+<script src="art.js"></script>
+<script>SPR.creature=ART.creature;SPR.foe=ART.foe;SPR.trainer=ART.trainer;</script>
 <script>
 {
 const P=window.P;
@@ -179,7 +182,7 @@ const TIERS=[{n:"Common",d:10,e:"⬜",r:[18,45]},{n:"Uncommon",d:25,e:"🟩",r:[
 const TC={normal:"#a8a878",fire:"#f08030",water:"#6890f0",grass:"#78c850",electric:"#e0b820",ice:"#68b8b8",fighting:"#c03028",poison:"#a040a0",ground:"#c8a048",flying:"#a890f0",psychic:"#f85888",bug:"#a8b820",rock:"#b8a038",ghost:"#705898",dragon:"#7038f8",dark:"#705848",steel:"#9898b8",fairy:"#e47c9c"};
 const STARTERS=["fire","water","grass"].map(t=>({type:t,stages:SPR.names(t)}));
 const ME={hair:"#1aa39a",jacket:"#f08a3a",accent:"#ffd23f",style:0};
-const leader=i=>({hair:["#7a5a2a","#c03028","#e0b820","#f05020","#8a6a4a","#7a68d0","#d8487a","#2f6fd0","#5a2ad0"][i],jacket:Object.values({a:"#b8a038",b:"#c03028",c:"#e0b820",d:"#f08030",e:"#a8a878",f:"#a890f0",g:"#f85888",h:"#6890f0",i:"#7038f8"})[i],accent:"#ffffff",style:i%3});
+const leader=i=>({hair:["#7a5a2a","#c03028","#e0b820","#f05020","#8a6a4a","#7a68d0","#d8487a","#2f6fd0","#5a2ad0"][i],jacket:Object.values({a:"#b8a038",b:"#c03028",c:"#e0b820",d:"#f08030",e:"#a8a878",f:"#a890f0",g:"#f85888",h:"#6890f0",i:"#7038f8"})[i],accent:"#ffffff",style:1+i%2});
 const MOVES={grass:["Absorb","Razor Leaf","Leaf Blade","Giga Drain","Solar Beam","Frenzy Plant"],fire:["Ember","Flame Wheel","Flamethrower","Fire Blast","Overheat","Blast Burn"],water:["Bubble","Water Gun","Surf","Waterfall","Hydro Pump","Hydro Cannon"]};
 const FOEMOVE={rock:"Rock Throw",fighting:"Karate Chop",electric:"Thunder Shock",fire:"Ember",normal:"Tackle",flying:"Wing Attack",psychic:"Confusion",water:"Water Pulse",dragon:"Dragon Breath"};
 const GYMS=[
@@ -191,7 +194,7 @@ const GYMS=[
 const GENERAL=["legend","ability","starter","ghost","dragon"];
 const EFF={grass:{rock:1.5,water:1.5,fire:.75,flying:.75,dragon:.75},fire:{rock:.75,fire:.75,water:.75,dragon:.75},water:{rock:1.5,fire:1.5,water:.75,dragon:.75}};
 const FOE={rock:{fire:1.5},electric:{water:1.5},fire:{grass:1.5},flying:{grass:1.5},water:{fire:1.5}};
-const T=15,HPS=[100,130,170],POW=[1,1.15,1.3],SIZE=[84,104,124];
+const T=20,HPS=[100,130,170],POW=[1,1.15,1.3],SIZE=[130,150,170];
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/&/g,"and").replace(/[^a-z0-9]/g,"");
 for(const k in P){const p=P[k];p.list=[];p.t.forEach((g,ti)=>{if(g)g.split("|").forEach(a=>{const al=a.split("/");p.list.push({d:al[0],k:al.map(norm),t:ti})})})}
 function lev(a,b){if(Math.abs(a.length-b.length)>3)return 9;let pr=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(pr[j]+1,c[j-1]+1,pr[j-1]+(a[i-1]===b[j-1]?0:1));pr=c}return pr[b.length]}
@@ -262,7 +265,7 @@ $("fight").onclick=()=>{const g=GYMS[S.gym];const pool=g.champ?P.legend.list.con
  show("battle");say(`${g.champ?"Champion":"Leader"} ${esc(g.n)} wants to battle!`,"Next",async()=>{ft.classList.add("out");await wait(350);$("foe").style.opacity=1;document.querySelector(".info.f").style.opacity=1;
   say(`${esc(g.n)} sent out <b>${esc(tc(S.team[0]))}</b>!`,"Next",async()=>{mt.classList.add("out");await wait(350);$("me").style.opacity=1;document.querySelector(".info.m").style.opacity=1;say(`Go, <b>${esc(meName())}</b>!`,"Next",turn)})})};
 function setMe(){const m=$("me");m.className="mon m spr";m.style.setProperty("--img",SPR.creature(S.s.type,S.stage));m.style.setProperty("--c",TC[S.s.type]);m.style.setProperty("--s",SIZE[S.stage]+"px");m.style.setProperty("--st",S.stage);$("meName").textContent=meName().toUpperCase();$("meLv").textContent="Lv"+(5+S.badges*6);hp()}
-function sendFoe(){const g=GYMS[S.gym];S.foeHp=100;const f=$("foe");f.className="mon f spr";f.style.setProperty("--img",SPR.foe(g.champ?(S.fi%2?"psychic":"dragon"):g.type));f.style.setProperty("--c",TC[g.type==="dragon"&&S.fi===0?"dragon":g.type]);f.style.setProperty("--s",(70+S.gym*3)+"px");f.style.setProperty("--st",g.champ?2:1);
+function sendFoe(){const g=GYMS[S.gym];S.foeHp=100;const f=$("foe");f.className="mon f spr";f.style.setProperty("--img",SPR.foe(g.champ?(S.fi%2?"psychic":"dragon"):g.type));f.style.setProperty("--c",TC[g.type==="dragon"&&S.fi===0?"dragon":g.type]);f.style.setProperty("--s",(120+S.gym*3)+"px");f.style.setProperty("--st",g.champ?2:1);
  $("foeName").textContent=tc(S.team[S.fi]).toUpperCase();$("foeLv").textContent="Lv"+(6+S.gym*6);$("foeTeam").textContent="Team "+S.team.map((_,i)=>i<S.fi?"●":"○").join("");hp()}
 function hp(){const col=v=>v>50?"#4cd964":v>20?"#ffcc00":"#ff3b30";const f=Math.max(0,S.foeHp),m=Math.max(0,S.hp)/HPS[S.stage]*100;
  $("foeHp").style.width=f+"%";$("foeHp").style.background=col(f);$("meHp").style.width=m+"%";$("meHp").style.background=col(m);$("meHpN").textContent=`${Math.max(0,S.hp)}/${HPS[S.stage]}`}
@@ -274,11 +277,47 @@ const ABL=Object.entries(window.ABIL).map(([a,t])=>({q:`Who can have the ability
 const CL=window.CLUES.map(l=>{const[n,t,g,a,e]=l.split("|");return{n,types:t.split(" "),g,a,e}});
 const DEXN=window.DEX.map(norm);
 const SGP=window.SIG.map(([m,t,a])=>({q:`Whose signature move is ${m}?`,list:a.split("|").map(x=>{const al=x.split("/");return{d:al[0],k:al.map(norm),t}}),key:"s:"+m}));
-const KINDS=[["type",2],["ability",2],["dex",2],["clue",2],["sig",2],["general",1]];
+// ---- Generated questions from the full dataset (window.PD) ----
+const PD=window.PD.map((r,i)=>({no:i+1,n:r[0],g:r[1],t:r[2],a:r[3],gn:r[4],c:r[5],w:r[6],h:r[7],f:r[8],eg:r[9],st:r[10],from:r[11]}));
+const CUR={};for(const k in P)for(const e of P[k].list)for(const kk of e.k)CUR[kk]=Math.min(CUR[kk]??9,e.t);
+const fame=m=>{const c=CUR[norm(m.n)];if(c!==undefined)return c;return m.g===1?1:m.g===2?2:m.g<=4?3:m.g<=6?4:5};
+const ent=(m,min=0)=>({d:m.n.toLowerCase(),k:[norm(m.n)],t:Math.min(5,Math.max(min,fame(m)))});
+const group=keyFn=>{const o={};for(const m of PD)for(const k of [].concat(keyFn(m)||[])){(o[k]=o[k]||[]).push(m)}return o};
+const ofSize=(o,a,b)=>Object.entries(o).filter(([k,v])=>v.length>=a&&v.length<=b);
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+const DUAL=ofSize(group(m=>m.t.length===2?[m.t.slice().sort().join("/")]:[]),2,18);
+const ABANY=ofSize(group(m=>m.a),2,22);
+const GENUS=ofSize(group(m=>m.gn),1,3);
+const STONE=ofSize(group(m=>m.st),2,30);
+const COLTYPE=ofSize(group(m=>m.t.map(t=>m.c+"|"+t)),2,12);
+const GENTYPE=ofSize(group(m=>m.t.map(t=>m.g+"|"+t)),3,20);
+const EGG=ofSize(group(m=>m.eg),3,70);
+const KIDS=group(m=>m.from?[String(m.from)]:[]);
+const TYPEALL=group(m=>m.t);
+const fullType=k=>{const have=new Set(P[k].list.flatMap(e=>e.k));return P[k].list.concat((TYPEALL[k]||[]).filter(m=>!have.has(norm(m.n))).map(m=>ent(m)))};
+const TL={};for(const k of["rock","fighting","electric","fire","normal","flying","psychic","water","dragon","ghost"])TL[k]=fullType(k);
+const GENS={
+ dual(){const[c,ms]=pick(DUAL);const[a,b]=c.split("/");return{q:`Name a ${cap(a)}/${cap(b)}-type Pokémon`,html:`Name a ${chip(a)} ${chip(b)} Pokémon`,list:ms.map(m=>ent(m,1)),key:"du:"+c}},
+ abany(){const[a,ms]=pick(ABANY);return{q:`Who can have the ability ${a}?`,list:ms.map(m=>ent(m,1)),key:"ab:"+a}},
+ genus(){const[gn,ms]=pick(GENUS);return{q:`Which Pokémon is known as the “${gn}”?`,list:ms.map(m=>ent(m,3)),key:"gn:"+gn}},
+ stone(){const[it,ms]=pick(STONE);return{q:`Name a Pokémon that evolves when you use a ${it} on it`,list:ms.map(m=>ent(m,1)),key:"st:"+it}},
+ coltype(){const[k,ms]=pick(COLTYPE);const[c,t]=k.split("|");return{q:`Name a ${c} ${cap(t)}-type Pokémon (by Pokédex colour)`,list:ms.map(m=>ent(m,1)),key:"ct:"+k}},
+ gentype(){const[k,ms]=pick(GENTYPE);const[g,t]=k.split("|");return{q:`Name a Generation ${g} ${cap(t)}-type Pokémon`,list:ms.map(m=>ent(m,1)),key:"gt:"+k}},
+ egg(){const[g,ms]=pick(EGG);return{q:`Name a Pokémon in the ${g} Egg Group`,list:ms.map(m=>ent(m,1)),key:"eg:"+g}},
+ weight(){const o=pick([["weighs 400 kg or more",m=>m.w>=400],["weighs 1 kg or less",m=>m.w<=1],["is 4 metres tall or more",m=>m.h>=4],["is 0.2 metres tall or less",m=>m.h<=.2]]);
+  return{q:`Name a Pokémon that ${o[0]}`,list:PD.filter(o[1]).map(m=>ent(m,1)),key:"w:"+o[0]}},
+ evo(){const[pid,ks]=pick(Object.entries(KIDS));const par=PD[pid-1];return{q:`What does ${par.n} evolve into?`,list:ks.map(m=>ent(m,0)),key:"ev:"+pid}},
+ pre(){const m=pick(PD.filter(x=>x.from));const par=PD[m.from-1];return{q:`What does ${m.n} evolve from?`,list:[ent(par,1)],key:"pr:"+m.no}},
+ baby(){return{q:"Name a baby Pokémon",list:PD.filter(m=>m.f&4).map(m=>ent(m,1)),key:"baby"}},
+ auto(){const m=pick(PD.filter(x=>fame(x)<=4));const ab=pick(m.a);return{q:"Which Pokémon is this?",html:`Which Pokémon is this?<div style="font-size:15px;font-weight:600;margin-top:6px;line-height:1.7">${m.t.map(chip).join(" ")} · Gen ${m.g} · Ability: ${esc(ab)} · ${m.w} kg</div>`,list:[ent(m,3)],key:"au:"+m.no}}
+};
+const KINDS=[["type",2],["dual",2],["ability",1],["abany",1.5],["dex",1.5],["clue",1],["auto",1.2],["sig",1.5],["genus",1],["stone",1],["coltype",.8],["gentype",1],["egg",.8],["weight",.7],["evo",1.4],["pre",1],["baby",.3],["general",.8]];
+const KW=KINDS.reduce((a,[,w])=>a+w,0);
 function makePrompt(){const g=GYMS[S.gym];
- for(let tries=0;tries<60;tries++){let r=Math.random()*11,kind="type";for(const[k,w] of KINDS){if((r-=w)<0){kind=k;break}}
+ for(let tries=0;tries<60;tries++){let r=Math.random()*KW,kind="type";for(const[k,w] of KINDS){if((r-=w)<0){kind=k;break}}
   if(kind===S.lastKind&&tries<50)continue;if(kind==="type"&&S.gtc>=2&&tries<50)continue;let p;
-  if(kind==="type"){const k=g.champ?pick(["dragon","legend"]):g.type;p={q:P[k].q,list:P[k].list,key:"t:"+k}}
+  if(kind==="type"){const k=g.champ?pick(["dragon","legend"]):g.type;p={q:P[k].q,list:TL[k]||P[k].list,key:"t:"+k}}
+  else if(GENS[kind])p=GENS[kind]();
   else if(kind==="general"){const k=pick(GENERAL);p={q:P[k].q,list:P[k].list,key:"g:"+k}}
   else if(kind==="ability")p=pick(ABL);
   else if(kind==="sig")p=pick(SGP);
@@ -287,7 +326,7 @@ function makePrompt(){const g=GYMS[S.gym];
    p={q:`Name a Pokémon within 50 of Pokédex #${n}`,list,key:"d:"+n,dex:n,lo,hi}}
   else{const c=pick(CL);p={q:"Which Pokémon is this?",html:`Which Pokémon is this?<div style="font-size:15px;font-weight:600;margin-top:6px;line-height:1.7">${c.types.map(chip).join(" ")} · Gen ${c.g} · Ability: ${esc(c.a)} · ${esc(c.e)}</div>`,list:[{d:c.n,k:[norm(c.n)],t:4}],key:"c:"+c.n}}
   if(p.q===S.lastQ&&tries<55)continue;if(kind!=="type"&&S.seen.has(p.key)&&tries<45)continue;S.seen.add(p.key);S.lastKind=kind;S.lastQ=p.q;if(kind==="type")S.gtc=(S.gtc||0)+1;return p}
- return {q:P[g.type].q,list:P[g.type].list,key:"t"}}
+ return {q:P[g.type].q,list:TL[g.type]||P[g.type].list,key:"t"}}
 window.__cur=()=>cur;
 function reveal(){const L=cur.list;if(cur.dex)return `<p class="pct">#${cur.dex} is <b>${esc(window.DEX[cur.dex-1])}</b>. Anything from #${cur.lo} to #${cur.hi} counted.</p>`;
  if(L.length<=3)return `<p class="pct">The answer was <b>${L.map(e=>esc(tc(e.d))).join(" / ")}</b>.</p>`;
