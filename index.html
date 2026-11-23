@@ -58,6 +58,21 @@ h2{font-size:clamp(20px,4.6vw,28px);line-height:1.15;margin:4px 0 8px;text-wrap:
 .mon.back::before{display:none}
 .mon.f{right:calc(5% + 19% - var(--s)/2);top:calc(48% - var(--s))}
 .mon.m{left:calc(2% + 22% - var(--s)/2);bottom:calc(13%)}
+.mon.spr{background:var(--img) center/contain no-repeat;image-rendering:pixelated;border-radius:0;box-shadow:none}
+.mon.spr::before,.mon.spr::after{display:none}
+.tr{position:absolute;width:calc(var(--h)*.67);height:var(--h);background:var(--img) center bottom/contain no-repeat;image-rendering:pixelated;transition:transform .6s ease,opacity .6s}
+.tr.f{right:calc(5% + 19% - var(--h)*.33);top:calc(50% - var(--h))}.tr.m{left:calc(2% + 22% - var(--h)*.33);bottom:13%}
+.tr.out.f{transform:translateX(160px);opacity:0}.tr.out.m{transform:translateX(-160px);opacity:0}
+.pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.pk{border:3px solid var(--line);background:var(--bg);color:var(--ink);border-radius:18px;padding:14px 8px;cursor:pointer;font:700 15px Rubik,sans-serif;display:grid;justify-items:center;gap:6px;min-height:44px}
+.pk:hover,.pk:focus-visible{border-color:var(--acc);outline:none;transform:translateY(-3px)}
+.pk i{width:96px;height:96px;background:var(--img) center/contain no-repeat;image-rendering:pixelated;animation:bob 1.6s ease-in-out infinite}
+.pk small{font-weight:400;color:var(--mute)}
+.vs{display:flex;justify-content:center;align-items:flex-end;gap:clamp(20px,8vw,80px);margin:14px 0}
+.vs i{width:72px;height:108px;background:var(--img) center bottom/contain no-repeat;image-rendering:pixelated}
+.vs span{font:14px "Press Start 2P",monospace;color:var(--hot);align-self:center}
+#bike{position:absolute;bottom:9%;left:18%;width:120px;height:80px;background:var(--img) center/contain no-repeat;image-rendering:pixelated;animation:ride .5s steps(2) infinite}
+@keyframes ride{50%{transform:translateY(-3px)}}
 .mon.hit{animation:hit .5s}.mon.faint{animation:faint .7s forwards}.mon.evo{animation:evo 1.4s}
 @keyframes bob{50%{transform:translateY(-6px)}}
 @keyframes hit{0%,40%,80%{filter:brightness(3);transform:translateX(-8px)}20%,60%,100%{filter:none;transform:translateX(8px)}}
@@ -109,21 +124,21 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
 </style>
 </head>
 <body>
-<div id="bg" aria-hidden="true"><div class="l stars"></div><div class="sun"></div><div class="l clouds2" id="c2"></div><div class="l clouds" id="c1"></div><div class="l mtn" id="mtn"></div><div class="l sea"></div><div class="l trees" id="trees"></div><div class="l ground"></div></div>
+<div id="bg" aria-hidden="true"><div class="l stars"></div><div class="sun"></div><div class="l clouds2" id="c2"></div><div class="l clouds" id="c1"></div><div class="l mtn" id="mtn"></div><div class="l sea"></div><div class="l trees" id="trees"></div><div class="l ground"></div><div id="bike"></div></div>
 <div class="wrap">
 <header><h1 class="px">Shiny<b>Hunt</b></h1><span class="best" id="best"></span></header>
 
 <section id="intro" class="card">
   <h2>Choose your partner. Beat eight gyms. Rare answers hit harder.</h2>
-  <p style="margin:0">Every turn you get a prompt and 15 seconds. Wrong guesses? Keep typing. The rarer your answer, the stronger the move, and a <b>Shiny</b> answer is an instant KO. Your partner evolves after badges 2 and 5. Opponents are random every run.</p>
-  <div class="gens" id="gens"></div>
+  <p style="margin:0">Every turn you get a prompt and 15 seconds. Wrong guesses? Keep typing. The rarer your answer, the stronger the move, and a <b>Shiny</b> answer is an instant KO. Your partner evolves after badges 2 and 5, and its look changes too. Opponents are random every run.</p>
+  <div class="pick" id="gens"></div>
   <div class="legend" id="legend"></div>
 </section>
 
 <section id="pre" class="card hide">
   <div class="rail" id="rail1"></div>
   <p class="px" style="font-size:11px;color:var(--mute);margin:8px 0" id="preLbl"></p>
-  <h2 id="preTitle"></h2>
+  <h2 id="preTitle"></h2><div class="vs" id="vs"></div>
   <p id="preTxt" style="margin:0"></p>
   <div class="row"><button class="btn" id="fight">Battle!</button></div>
 </section>
@@ -132,7 +147,7 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
   <div class="rail" id="rail2"></div>
   <div class="scene" id="scene">
     <div class="plat f"></div><div class="plat m"></div>
-    <div class="mon f" id="foe"></div><div class="mon m back" id="me"></div>
+    <div class="mon f" id="foe"></div><div class="mon m spr" id="me"></div><div class="tr f" id="foeTr"></div><div class="tr m" id="meTr"></div>
     <div class="info f"><div class="nm"><span id="foeName"></span><span id="foeLv"></span></div><div class="hp"><em>HP</em><div><i id="foeHp"></i></div></div><div class="small" id="foeTeam" style="font-size:8px;margin-top:3px"></div></div>
     <div class="info m"><div class="nm"><span id="meName"></span><span id="meLv"></span></div><div class="hp"><em>HP</em><div><i id="meHp"></i></div></div><div class="hpn" id="meHpN"></div></div>
   </div>
@@ -148,26 +163,19 @@ input.bad{border-color:var(--hot);animation:shake .3s}@keyframes shake{25%,75%{t
   <p class="best" id="copied"></p>
 </section>
 
-<p class="note">Unofficial fan-made trivia, not affiliated with Nintendo, Game Freak or The Pokémon Company. Creatures, trainers and art are original placeholders. Rarity and player percentages are hand-made estimates until real player data exists.</p>
+<p class="note">Unofficial fan-made trivia, not affiliated with Nintendo, Game Freak or The Pokémon Company. Partner creatures, trainers and art are original designs. Rarity and player percentages are hand-made estimates until real player data exists.</p>
 </div>
 
 <script src="data.js"></script>
+<script src="sprites.js"></script>
 <script>
 {
 const P=window.P;
 const TIERS=[{n:"Common",d:10,e:"⬜",r:[18,45]},{n:"Uncommon",d:25,e:"🟩",r:[6,15]},{n:"Rare",d:45,e:"🟦",r:[2,5.5]},{n:"Epic",d:65,e:"🟪",r:[.8,1.9]},{n:"Legendary",d:85,e:"🟧",r:[.2,.7]},{n:"Shiny",d:100,e:"✨",r:[.01,.15]}];
 const TC={normal:"#a8a878",fire:"#f08030",water:"#6890f0",grass:"#78c850",electric:"#e0b820",ice:"#68b8b8",fighting:"#c03028",poison:"#a040a0",ground:"#c8a048",flying:"#a890f0",psychic:"#f85888",bug:"#a8b820",rock:"#b8a038",ghost:"#705898",dragon:"#7038f8",dark:"#705848",steel:"#9898b8",fairy:"#e47c9c"};
-const STARTERS=[
- ["Bulbasaur,Ivysaur,Venusaur","grass"],["Charmander,Charmeleon,Charizard","fire"],["Squirtle,Wartortle,Blastoise","water"],
- ["Chikorita,Bayleef,Meganium","grass"],["Cyndaquil,Quilava,Typhlosion","fire"],["Totodile,Croconaw,Feraligatr","water"],
- ["Treecko,Grovyle,Sceptile","grass"],["Torchic,Combusken,Blaziken","fire"],["Mudkip,Marshtomp,Swampert","water"],
- ["Turtwig,Grotle,Torterra","grass"],["Chimchar,Monferno,Infernape","fire"],["Piplup,Prinplup,Empoleon","water"],
- ["Snivy,Servine,Serperior","grass"],["Tepig,Pignite,Emboar","fire"],["Oshawott,Dewott,Samurott","water"],
- ["Chespin,Quilladin,Chesnaught","grass"],["Fennekin,Braixen,Delphox","fire"],["Froakie,Frogadier,Greninja","water"],
- ["Rowlet,Dartrix,Decidueye","grass"],["Litten,Torracat,Incineroar","fire"],["Popplio,Brionne,Primarina","water"],
- ["Grookey,Thwackey,Rillaboom","grass"],["Scorbunny,Raboot,Cinderace","fire"],["Sobble,Drizzile,Inteleon","water"],
- ["Sprigatito,Floragato,Meowscarada","grass"],["Fuecoco,Crocalor,Skeledirge","fire"],["Quaxly,Quaxwell,Quaquaval","water"]
-].map(([n,t])=>({stages:n.split(","),type:t}));
+const STARTERS=["fire","water","grass"].map(t=>({type:t,stages:SPR.names(t)}));
+const ME={hair:"#1aa39a",jacket:"#f08a3a",accent:"#ffd23f",style:0};
+const leader=i=>({hair:["#7a5a2a","#c03028","#e0b820","#f05020","#8a6a4a","#7a68d0","#d8487a","#2f6fd0","#5a2ad0"][i],jacket:Object.values({a:"#b8a038",b:"#c03028",c:"#e0b820",d:"#f08030",e:"#a8a878",f:"#a890f0",g:"#f85888",h:"#6890f0",i:"#7038f8"})[i],accent:"#ffffff",style:i%3});
 const MOVES={grass:["Absorb","Razor Leaf","Leaf Blade","Giga Drain","Solar Beam","Frenzy Plant"],fire:["Ember","Flame Wheel","Flamethrower","Fire Blast","Overheat","Blast Burn"],water:["Bubble","Water Gun","Surf","Waterfall","Hydro Pump","Hydro Cannon"]};
 const FOEMOVE={rock:"Rock Throw",fighting:"Karate Chop",electric:"Thunder Shock",fire:"Ember",normal:"Tackle",flying:"Wing Attack",psychic:"Confusion",water:"Water Pulse",dragon:"Dragon Breath"};
 const GYMS=[
@@ -179,7 +187,7 @@ const GYMS=[
 const GENERAL=["legend","ability","levitate","intimidate","starter","ghost","dragon"];
 const EFF={grass:{rock:1.5,water:1.5,fire:.75,flying:.75,dragon:.75},fire:{rock:.75,fire:.75,water:.75,dragon:.75},water:{rock:1.5,fire:1.5,water:.75,dragon:.75}};
 const FOE={rock:{fire:1.5},electric:{water:1.5},fire:{grass:1.5},flying:{grass:1.5},water:{fire:1.5}};
-const T=15,HPS=[100,130,170],POW=[1,1.15,1.3],SIZE=[64,84,104];
+const T=15,HPS=[100,130,170],POW=[1,1.15,1.3],SIZE=[84,104,124];
 const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/&/g,"and").replace(/[^a-z0-9]/g,"");
 for(const k in P){const p=P[k];p.list=[];p.t.forEach((g,ti)=>{if(g)g.split("|").forEach(a=>{const al=a.split("/");p.list.push({d:al[0],k:al.map(norm),t:ti})})})}
 function lev(a,b){if(Math.abs(a.length-b.length)>3)return 9;let pr=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){const c=[i];for(let j=1;j<=b.length;j++)c[j]=Math.min(pr[j]+1,c[j-1]+1,pr[j-1]+(a[i-1]===b[j-1]?0:1));pr=c}return pr[b.length]}
@@ -215,20 +223,25 @@ let S=null,timer=null,left=0,cur=null,busy=false;
 const show=s=>["intro","pre","battle","end"].forEach(x=>$(x).classList.toggle("hide",x!==s));
 function bestLine(){const b=store.get("sh-best");$("best").textContent=b?`Best: ${b.badges} badges · ${b.dmg} dmg`:""}
 $("legend").innerHTML=TIERS.map(t=>`<div>${t.e} <b>${t.n}</b> · ${t.d===100?"instant KO":t.d+" power"}</div>`).join("");
-$("gens").innerHTML=[0,1,2,3,4,5,6,7,8].map(g=>`<div class="gen"><b>GEN ${g+1}</b>${[0,1,2].map(i=>{const s=STARTERS[g*3+i];return `<button class="st" data-i="${g*3+i}"><span class="dot" style="background:${TC[s.type]}"></span>${s.stages[0]}</button>`}).join("")}</div>`).join("");
-document.querySelectorAll(".st").forEach(b=>b.onclick=()=>{const s=STARTERS[+b.dataset.i];S={s,stage:0,hp:HPS[0],gym:0,badges:0,dmg:0,hits:[],turns:0};pre()});
+$("gens").innerHTML=STARTERS.map((s,i)=>`<button class="pk" data-i="${i}"><i style='--img:${SPR.creature(s.type,0)}'></i>${s.stages[0]}<span class="type" style="background:${TC[s.type]}">${s.type}</span><small>${s.type==="fire"?"Hard mode":s.type==="grass"?"Strong vs Rock, Water":"Strong vs Rock, Fire"}</small></button>`).join("");
+document.querySelectorAll(".pk").forEach(b=>b.onclick=()=>{const s=STARTERS[+b.dataset.i];S={s,stage:0,hp:HPS[0],gym:0,badges:0,dmg:0,hits:[],turns:0};pre()});
 const meName=()=>S.s.stages[S.stage];
 function rail(){return GYMS.map((g,i)=>`<span class="${i<S.badges?"got":i===S.gym?"now":""}">${g.champ?"👑":i<S.badges?"🏅":i+1}</span>`).join("")}
 function pre(){const g=GYMS[S.gym];setBg(GYMSKY[S.gym]);$("rail1").innerHTML=rail();$("preLbl").textContent=g.champ?"FINAL BATTLE":`GYM ${S.gym+1} OF 8`;
  $("preTitle").textContent=`${g.champ?"Champion":"Leader"} ${g.n} · ${tc(g.type)} type`;
+ $("vs").innerHTML=`<i style='--img:${SPR.trainer(ME)}'></i><span>VS</span><i style='--img:${SPR.trainer(leader(S.gym))}'></i>`;
  const e=EFF[S.s.type][g.type]||1,f=(FOE[g.type]||{})[S.s.type]||1;
  $("preTxt").innerHTML=`You arrive at ${g.town}. ${g.n} has <b>${g.team} Pokémon</b>. ${meName()} has ${S.hp}/${HPS[S.stage]} HP.${e>1?" Your moves are <b>super effective</b> here.":e<1?" Your moves are <b>not very effective</b> here.":""}${f>1?" Careful: their moves are super effective on you.":""}`;
  show("pre");$("fight").focus()}
 $("fight").onclick=()=>{const g=GYMS[S.gym];const pool=g.champ?P.legend.list.concat(P.dragon.list):P[g.type].list;
  S.team=[];while(S.team.length<g.team){const m=pick(pool).d;if(!S.team.includes(m))S.team.push(m)}
  S.fi=0;S.used=new Set();S.last=null;$("rail2").innerHTML=rail();$("scene").classList.toggle("night",!!g.night);
- setMe();sendFoe();show("battle");say(`${g.champ?"Champion":"Leader"} ${esc(g.n)} sent out <b>${esc(tc(S.team[0]))}</b>!`,"Next",turn)};
-function setMe(){const m=$("me");m.style.setProperty("--c",TC[S.s.type]);m.style.setProperty("--s",SIZE[S.stage]+"px");m.style.setProperty("--st",S.stage);$("meName").textContent=meName().toUpperCase();$("meLv").textContent="Lv"+(5+S.badges*6);hp()}
+ setMe();sendFoe();
+ const ft=$("foeTr"),mt=$("meTr");ft.style.setProperty("--img",SPR.trainer(leader(S.gym)));mt.style.setProperty("--img",SPR.trainer(ME));
+ ft.style.setProperty("--h","120px");mt.style.setProperty("--h","130px");ft.classList.remove("out");mt.classList.remove("out");$("foe").style.opacity=0;$("me").style.opacity=0;document.querySelector(".info.f").style.opacity=0;document.querySelector(".info.m").style.opacity=0;
+ show("battle");say(`${g.champ?"Champion":"Leader"} ${esc(g.n)} wants to battle!`,"Next",async()=>{ft.classList.add("out");await wait(350);$("foe").style.opacity=1;document.querySelector(".info.f").style.opacity=1;
+  say(`${esc(g.n)} sent out <b>${esc(tc(S.team[0]))}</b>!`,"Next",async()=>{mt.classList.add("out");await wait(350);$("me").style.opacity=1;document.querySelector(".info.m").style.opacity=1;say(`Go, <b>${esc(meName())}</b>!`,"Next",turn)})})};
+function setMe(){const m=$("me");m.className="mon m spr";m.style.setProperty("--img",SPR.creature(S.s.type,S.stage));m.style.setProperty("--c",TC[S.s.type]);m.style.setProperty("--s",SIZE[S.stage]+"px");m.style.setProperty("--st",S.stage);$("meName").textContent=meName().toUpperCase();$("meLv").textContent="Lv"+(5+S.badges*6);hp()}
 function sendFoe(){const g=GYMS[S.gym];S.foeHp=100;const f=$("foe");f.className="mon f";f.style.setProperty("--c",TC[g.type==="dragon"&&S.fi===0?"dragon":g.type]);f.style.setProperty("--s",(70+S.gym*3)+"px");f.style.setProperty("--st",g.champ?2:1);
  $("foeName").textContent=tc(S.team[S.fi]).toUpperCase();$("foeLv").textContent="Lv"+(6+S.gym*6);$("foeTeam").textContent="Team "+S.team.map((_,i)=>i<S.fi?"●":"○").join("");hp()}
 function hp(){const col=v=>v>50?"#4cd964":v>20?"#ffcc00":"#ff3b30";const f=Math.max(0,S.foeHp),m=Math.max(0,S.hp)/HPS[S.stage]*100;
@@ -260,11 +273,11 @@ async function attack(hit){busy=true;clearInterval(timer);S.used.add(hit.d);S.tu
   return say(html,"Next",()=>{S.fi++;if(S.fi<S.team.length){sendFoe();say(`${esc(g.n)} sent out <b>${esc(tc(S.team[S.fi]))}</b>!`,"Next",turn)}else win()})}
  const fm=(FOE[g.type]||{})[S.s.type]||1,fd=Math.round((6+S.gym*2)*fm);
  say(html,"Next",async()=>{say(`<p>Foe <b>${esc(tc(S.team[S.fi]))}</b> used <b>${FOEMOVE[g.type]}</b>!${fm>1?" It's super effective!":""}</p>`);anim("foe","flunge");await wait(350);S.hp-=fd;anim("me","hit");hp();await wait(700);
-  if(S.hp<=0){$("me").className="mon m back faint";return say(`<p><b>${esc(meName().toUpperCase())}</b> fainted!</p>`,"Next",()=>over(false))}turn()})}
+  if(S.hp<=0){$("me").className="mon m spr faint";return say(`<p><b>${esc(meName().toUpperCase())}</b> fainted!</p>`,"Next",()=>over(false))}turn()})}
 async function timeout(){if(busy)return;busy=true;clearInterval(timer);S.turns++;S.hits.push("⬛");const g=GYMS[S.gym];const fm=(FOE[g.type]||{})[S.s.type]||1,fd=Math.round((10+S.gym*3)*fm);
  const leg=cur.list.filter(e=>e.t>=4);say(`<p>Time's up! ${esc(meName())} hesitated…</p>`);await wait(500);anim("foe","flunge");await wait(350);S.hp-=fd;anim("me","hit");hp();
  const html=`<p>Foe <b>${esc(tc(S.team[S.fi]))}</b> used <b>${FOEMOVE[g.type]}</b> for ${fd} damage!${fm>1?" It's super effective!":""}</p>${leg.length?`<p class="pct">A Legendary pick here was <b>${esc(tc(pick(leg).d))}</b>.</p>`:""}`;
- if(S.hp<=0){$("me").className="mon m back faint";return say(html+`<p><b>${esc(meName().toUpperCase())}</b> fainted!</p>`,"Next",()=>over(false))}
+ if(S.hp<=0){$("me").className="mon m spr faint";return say(html+`<p><b>${esc(meName().toUpperCase())}</b> fainted!</p>`,"Next",()=>over(false))}
  say(html,"Next",turn)}
 async function win(){const g=GYMS[S.gym];S.badges++;if(g.champ)return over(true);
  const heal=Math.min(Math.round(HPS[S.stage]/2),HPS[S.stage]-S.hp);S.hp+=heal;hp();
@@ -279,7 +292,7 @@ function over(champ){const b=store.get("sh-best");if(!b||S.badges>b.badges||(S.b
 $("share").onclick=async()=>{const txt=`Shiny Hunt ${S.badges===9?"👑 CHAMPION":`🏅${S.badges}/8`} · ${S.dmg} dmg with ${meName()}\n${S.hits.slice(-20).join("")}\n${location.href.split("#")[0]}`;
  try{await navigator.clipboard.writeText(txt);$("copied").textContent="Copied. Paste it in the group chat."}catch(e){$("copied").textContent=txt}};
 $("again").onclick=()=>{bestLine();setBg("day");show("intro")};
-setBg("day");bestLine();
+setBg("day");$("bike").style.setProperty("--img",SPR.bike(ME));bestLine();
 }
 </script>
 </body>
